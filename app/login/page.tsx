@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { supabase } from '@/lib/supabase'
+import LogoIcon from '@/app/ui/LogoIcon'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -22,7 +23,7 @@ export default function LoginPage() {
     if (error) {
       setError('Email ou mot de passe incorrect. Vérifiez vos identifiants.')
     } else {
-      router.push('/')
+      router.push('/dashboard')
       router.refresh()
     }
   }
@@ -36,13 +37,9 @@ export default function LoginPage() {
           style={{ background: '#0f0f1a', border: '1px solid rgba(255,255,255,0.08)' }}
         >
           {/* Logo */}
-          <div className="flex justify-center mb-8">
-            <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl font-black text-white"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
-            >
-              F
-            </div>
+          <div className="flex flex-col items-center gap-2 mb-8">
+            <LogoIcon size={48} />
+            <span className="font-black text-lg" style={{ color: '#f0f0f8' }}>FairPlay</span>
           </div>
 
           <h1 className="text-2xl font-black text-center mb-2" style={{ color: '#f0f0f8' }}>

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useAuth } from './AuthProvider'
 
 export default function HeaderAuth() {
-  const { user, loading, signOut } = useAuth()
+  const { user, loading, isPremium, signOut } = useAuth()
 
   if (loading) {
     return <div className="w-32 h-8 rounded-xl animate-pulse" style={{ background: 'rgba(255,255,255,0.05)' }} />
@@ -15,7 +15,7 @@ export default function HeaderAuth() {
     return (
       <div className="flex items-center gap-2">
         <Link
-          href="/compte"
+          href="/dashboard"
           className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm transition-all"
           style={{
             background: 'rgba(255,255,255,0.05)',
@@ -30,6 +30,14 @@ export default function HeaderAuth() {
             {initials}
           </div>
           <span className="hidden sm:inline">Mon compte</span>
+          {isPremium && (
+            <span
+              className="hidden sm:inline text-xs px-2 py-0.5 rounded-full font-bold"
+              style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
+            >
+              ⭐ Premium
+            </span>
+          )}
         </Link>
         <button
           onClick={signOut}

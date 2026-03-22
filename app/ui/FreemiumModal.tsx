@@ -95,15 +95,18 @@ function PremiumContent() {
         <p className="text-center text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#a78bfa' }}>
           Fairplay Premium
         </p>
+        <p className="text-center text-xs font-semibold mb-1" style={{ color: '#fbbf24' }}>
+          7 jours gratuits · puis
+        </p>
         <p className="text-center text-3xl font-black mb-4" style={{ color: '#f0f0f8' }}>
-          9,99€<span className="text-base font-normal" style={{ color: '#5a5a78' }}>/mois</span>
+          14,99€<span className="text-base font-normal" style={{ color: '#5a5a78' }}>/mois</span>
         </p>
         <div className="flex flex-col gap-2">
           {[
             '✓ Recherches illimitées',
+            '✓ Dashboard personnalisé complet',
+            '✓ Top 10 + comparaisons détaillées',
             '✓ Alertes nouveaux outils',
-            '✓ Comparaisons côte à côte',
-            '✓ Support prioritaire',
           ].map((f) => (
             <p key={f} className="text-sm" style={{ color: '#c4b5fd' }}>{f}</p>
           ))}
@@ -111,13 +114,20 @@ function PremiumContent() {
       </div>
 
       <button
-        className="w-full py-3 rounded-xl font-bold text-white mb-3"
-        style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
-        onClick={() => alert('Paiement bientôt disponible !')}
+        className="w-full py-3 rounded-xl font-bold mb-2"
+        style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', color: '#1a0a00' }}
+        onClick={() => alert('Paiement bientôt disponible — restez connecté !')}
       >
-        Passer Premium →
+        Commencer l'essai gratuit →
       </button>
-      <p className="text-center text-xs" style={{ color: '#3a3a50' }}>
+      <Link
+        href="/premium"
+        className="block text-center text-xs py-1"
+        style={{ color: '#5a5a78' }}
+      >
+        En savoir plus sur Premium →
+      </Link>
+      <p className="text-center text-xs mt-2" style={{ color: '#3a3a50' }}>
         Revenez demain pour 3 nouvelles recherches gratuites
       </p>
     </>
