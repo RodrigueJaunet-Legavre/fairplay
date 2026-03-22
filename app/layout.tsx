@@ -3,6 +3,7 @@ import { Geist } from 'next/font/google'
 import Link from 'next/link'
 import { AuthProvider } from '@/app/ui/AuthProvider'
 import HeaderAuth from '@/app/ui/HeaderAuth'
+import NavLinks from '@/app/ui/NavLinks'
 import LogoIcon from '@/app/ui/LogoIcon'
 import './globals.css'
 
@@ -31,24 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </span>
             </Link>
 
-            <nav className="hidden md:flex items-center gap-1">
-              {[
-                { href: '/decouvrir', label: '✨ Découvrir' },
-                { href: '/top', label: '🏆 Top 10' },
-                { href: '/tools', label: 'Explorer' },
-                { href: '/tools?category=writing', label: 'Rédaction' },
-                { href: '/tools?category=image', label: 'Image' },
-              ].map(({ href, label }) => (
-                <Link
-                  key={href}
-                  href={href}
-                  className="px-3 py-1.5 rounded-lg text-sm transition-colors"
-                  style={{ color: '#5a5a78' }}
-                >
-                  {label}
-                </Link>
-              ))}
-            </nav>
+            <NavLinks />
 
             <HeaderAuth />
           </div>

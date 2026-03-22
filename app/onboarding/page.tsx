@@ -18,8 +18,9 @@ export default function OnboardingPage() {
   const [objectifs, setObjectifs] = useState<string[]>([])
   const [saving, setSaving] = useState(false)
   const [checking, setChecking] = useState(true)
+  const [isEditing, setIsEditing] = useState(false)
 
-  // Redirect if not logged in, or if already onboarded
+  // Fetch existing profile to pre-fill, or proceed fresh
   useEffect(() => {
     if (loading) return
     if (!user) { router.replace('/login'); return }
@@ -28,12 +29,17 @@ export default function OnboardingPage() {
 
     supabase
       .from('profiles')
-      .select('id')
+      .select('metier, niveau, objectifs')
       .eq('id', user.id)
       .maybeSingle()
       .then(({ data }) => {
-        if (data) router.replace('/dashboard')
-        else setChecking(false)
+        if (data) {
+          setMetier(data.metier ?? '')
+          setNiveau(data.niveau ?? '')
+          setObjectifs(data.objectifs ?? [])
+          setIsEditing(true)
+        }
+        setChecking(false)
       })
   }, [user, loading, router])
 
@@ -68,6 +74,18 @@ export default function OnboardingPage() {
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 py-12">
       <div className="w-full max-w-2xl">
+
+        {/* Page title */}
+        <div className="mb-6 text-center">
+          <h1 className="text-2xl font-black" style={{ color: '#f0f0f8' }}>
+            {isEditing ? 'Modifier mes préférences' : 'Bienvenue sur FairPlay'}
+          </h1>
+          {isEditing && (
+            <p className="text-sm mt-1" style={{ color: '#5a5a78' }}>
+              Vos réponses actuelles sont pré-remplies — modifiez ce que vous voulez
+            </p>
+          )}
+        </div>
 
         {/* Progress bar */}
         <div className="mb-10">
@@ -162,7 +180,7 @@ export default function OnboardingPage() {
                   cursor: objectifs.length === 0 || saving ? 'not-allowed' : 'pointer',
                 }}
               >
-                {saving ? 'Enregistrement…' : 'Accéder à mon espace ✨'}
+                {saving ? 'Enregistrement…' : isEditing ? 'Enregistrer les modifications ✓' : 'Accéder à mon espace ✨'}
               </button>
             )}
           </div>
