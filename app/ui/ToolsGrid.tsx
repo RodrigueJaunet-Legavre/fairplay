@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import type { CatalogTool } from '@/lib/catalog-types'
 import { catalogCategories } from '@/lib/tools-index'
 import ToolCard from './ToolCard'
+import SearchRankingList from './SearchRankingList'
 
 export default function ToolsGrid({ tools }: { tools: CatalogTool[] }) {
   const searchParams = useSearchParams()
@@ -17,6 +18,11 @@ export default function ToolsGrid({ tools }: { tools: CatalogTool[] }) {
     setActiveCategory(searchParams.get('category') ?? 'all')
     setQuery(searchParams.get('q') ?? '')
   }, [searchParams])
+
+  // When a search query is active, delegate to ranked results view
+  if (query.trim()) {
+    return <SearchRankingList query={query} tools={tools} />
+  }
 
   const filtered = tools
     .filter((tool) => {

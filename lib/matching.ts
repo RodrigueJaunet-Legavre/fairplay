@@ -1,5 +1,5 @@
 import type { CatalogTool } from './catalog-types'
-type Tool = CatalogTool
+import { getMatchingEntries } from './synonyms'
 
 function normalize(str: string): string {
   return str
@@ -25,43 +25,6 @@ function tokenize(str: string): string[] {
     .filter((w) => w.length > 2 && !STOP_WORDS.has(w))
 }
 
-// Synonym groups — any word in a group matches any other
-const SYNONYM_GROUPS: string[][] = [
-  ['video', 'clip', 'film', 'animation', 'montage', 'reels', 'youtube', 'tiktok', 'shorts'],
-  ['image', 'photo', 'visuel', 'illustration', 'picture', 'img', 'graphique', 'thumbnail'],
-  ['logo', 'marque', 'brand', 'identite', 'branding'],
-  ['email', 'mail', 'newsletter', 'courriel', 'mailing', 'campagne'],
-  ['code', 'developpement', 'programmation', 'script', 'api', 'debug', 'bug'],
-  ['audio', 'son', 'musique', 'podcast', 'voix', 'speech', 'tts'],
-  ['article', 'blog', 'contenu', 'post', 'texte', 'redaction'],
-  ['resume', 'synthese', 'sommaire', 'recap', 'synthese'],
-  ['data', 'donnees', 'analyse', 'statistiques', 'chiffres', 'base'],
-  ['chat', 'chatbot', 'assistant', 'conversation', 'bot', 'support'],
-  ['design', 'interface', 'ui', 'ux', 'graphisme', 'maquette', 'wireframe'],
-  ['marketing', 'publicite', 'campagne', 'conversion', 'ads', 'pub'],
-  ['seo', 'referencement', 'google', 'positionnement'],
-  ['transcription', 'sous-titres', 'sous titres', 'retranscription', 'caption'],
-  ['presentation', 'slides', 'powerpoint', 'pitch', 'deck'],
-  ['social', 'reseaux', 'instagram', 'twitter', 'linkedin', 'tiktok'],
-  ['reunion', 'meeting', 'standup', 'call', 'conference'],
-  ['recherche', 'paper', 'article', 'scientifique', 'academique'],
-  ['couleur', 'palette', 'charte', 'couleurs'],
-  ['traduction', 'translation', 'langue'],
-]
-
-function expandTokens(tokens: string[]): Set<string> {
-  const expanded = new Set(tokens)
-  for (const token of tokens) {
-    for (const group of SYNONYM_GROUPS) {
-      if (group.some((g) => g.includes(token) || token.includes(g))) {
-        group.forEach((g) => expanded.add(g))
-        break
-      }
-    }
-  }
-  return expanded
-}
-
 export type MatchResult = {
   tool: CatalogTool
   score: number
@@ -70,69 +33,91 @@ export type MatchResult = {
 }
 
 function buildExplanation(tool: CatalogTool, matchedTags: string[], score: number): string {
-  if (matchedTags.length === 0) return `${tool.name} correspond à votre recherche.`
-  const tag = matchedTags[0]
-  if (score >= 70) return `${tool.name} est parfaitement adapté pour ${tag}.`
-  if (score >= 45) return `${tool.name} correspond bien à votre besoin de ${tag}.`
-  return `${tool.name} peut vous aider pour ${tag}.`
+  if (matchedTags.length > 0) {
+    const tag = matchedTags[0]
+    if (score >= 6) return `${tool.name} est parfaitement adapté pour ${tag}.`
+    if (score >= 3) return `${tool.name} correspond bien à votre besoin de ${tag}.`
+    return `${tool.name} peut vous aider pour ${tag}.`
+  }
+  return `${tool.name} correspond à votre recherche.`
 }
 
-export function findBestMatches(query: string, allTools: CatalogTool[], limit = 3): MatchResult[] {
+export function findBestMatches(query: string, allTools: CatalogTool[], limit = 6): MatchResult[] {
   const rawTokens = tokenize(query)
   if (rawTokens.length === 0) return []
 
-  const expandedTokens = expandTokens(rawTokens)
+  // Expand with synonym entries
+  const matchedEntries = getMatchingEntries(rawTokens)
+  const expandedCategories = new Set<string>(matchedEntries.flatMap((e) => e.categories.map(normalize)))
+  const expandedTags = new Set<string>(matchedEntries.flatMap((e) => e.tags.map(normalize)))
+
+  // Also add the raw tokens themselves as additional search terms
+  const allTokens = new Set([...rawTokens])
 
   const scored = allTools.map((tool) => {
-    const tagNorms = tool.tags.map((t) => ({ original: t, norm: normalize(t) }))
     const nameNorm = normalize(tool.name)
-    const taglineNorm = normalize(tool.tagline)
-    const descNorm = normalize(tool.description)
+    const categoryNorm = normalize(tool.category)
+    const tagNorms = tool.tags.map((t) => normalize(t))
 
     let score = 0
     const matchedTags: string[] = []
 
-    // Tags (highest weight: 30 pts per matching token per tag)
-    for (const { original, norm } of tagNorms) {
-      let tagScore = 0
-      for (const token of expandedTokens) {
-        if (norm.includes(token)) tagScore += 30
-      }
-      if (tagScore > 0) {
-        score += tagScore
-        if (!matchedTags.includes(original)) matchedTags.push(original)
+    // +3 if any query token appears in the tool name
+    for (const token of allTokens) {
+      if (nameNorm.includes(token)) {
+        score += 3
+        break
       }
     }
 
-    // Name (15 pts)
-    for (const token of expandedTokens) {
-      if (nameNorm.includes(token)) score += 15
+    // +2 if tool category matches a synonym-expanded category
+    if (expandedCategories.has(categoryNorm)) {
+      score += 2
+    } else {
+      // partial category match with raw tokens
+      for (const token of allTokens) {
+        if (categoryNorm.includes(token)) { score += 2; break }
+      }
     }
 
-    // Tagline (8 pts)
-    for (const token of expandedTokens) {
-      if (taglineNorm.includes(token)) score += 8
+    // +1 per matching tag (from expanded synonym tags or raw tokens)
+    for (let i = 0; i < tool.tags.length; i++) {
+      const tagNorm = tagNorms[i]
+      let tagMatched = false
+
+      // Check expanded synonym tags
+      for (const st of expandedTags) {
+        if (tagNorm.includes(st) || st.includes(tagNorm)) { tagMatched = true; break }
+      }
+      // Check raw tokens
+      if (!tagMatched) {
+        for (const token of allTokens) {
+          if (tagNorm.includes(token)) { tagMatched = true; break }
+        }
+      }
+
+      if (tagMatched) {
+        score += 1
+        if (!matchedTags.includes(tool.tags[i])) matchedTags.push(tool.tags[i])
+      }
     }
 
-    // Description (4 pts)
-    for (const token of expandedTokens) {
-      if (descNorm.includes(token)) score += 4
+    // Also check tagline/description for raw tokens (+0.5 each, using fractional scoring)
+    const taglineNorm = normalize(tool.tagline)
+    for (const token of allTokens) {
+      if (taglineNorm.includes(token)) { score += 0.5; break }
     }
-
-    // Normalize: max possible = all tokens match 3 tags = tokens * 3 * 30
-    const maxScore = Math.max(expandedTokens.size * 3 * 30, 1)
-    const percentage = Math.min(97, Math.round((score / maxScore) * 100))
 
     return {
       tool,
-      score: percentage,
+      score,
       matchedTags: matchedTags.slice(0, 3),
-      explanation: buildExplanation(tool, matchedTags, percentage),
+      explanation: buildExplanation(tool, matchedTags, score),
     }
   })
 
   return scored
-    .filter((r) => r.score >= 12)
+    .filter((r) => r.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limit)
 }

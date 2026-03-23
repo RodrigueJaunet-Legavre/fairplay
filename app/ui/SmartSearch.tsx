@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import type { CatalogTool } from '@/lib/catalog-types'
 import type { MatchResult } from '@/lib/matching'
+import { getSuggestions } from '@/lib/synonyms'
 import { useAuth } from './AuthProvider'
 import FreemiumModal from './FreemiumModal'
 
@@ -44,17 +45,20 @@ const PLACEHOLDERS = [
 
 export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, isPremium } = useAuth()
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<MatchResult[]>([])
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [placeholderIdx, setPlaceholderIdx] = useState(0)
   const [activeIdx, setActiveIdx] = useState(-1)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const suggDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const [modal, setModal] = useState<'signup' | 'premium' | null>(null)
 
   // Rotate placeholder text
@@ -77,6 +81,7 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
   }, [])
 
   function checkLimit(): 'signup' | 'premium' | null {
+    if (isPremium) return null
     const isLoggedIn = !!user
     const count = getSearchCount(isLoggedIn)
     if (!isLoggedIn && count >= ANON_LIMIT) return 'signup'
@@ -100,6 +105,7 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
       const matches = findBestMatches(q, tools, 3)
       setResults(matches)
       setIsOpen(matches.length > 0)
+      setShowSuggestions(false)
       setIsLoading(false)
       setActiveIdx(-1)
     },
@@ -110,8 +116,31 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const val = e.target.value
     setQuery(val)
+
+    // Suggestions (fast, no debounce needed)
+    if (suggDebounceRef.current) clearTimeout(suggDebounceRef.current)
+    if (val.trim().length >= 2) {
+      suggDebounceRef.current = setTimeout(() => {
+        const s = getSuggestions(val, 5)
+        setSuggestions(s)
+        setShowSuggestions(s.length > 0)
+      }, 120)
+    } else {
+      setSuggestions([])
+      setShowSuggestions(false)
+    }
+
+    // Full search
     if (debounceRef.current) clearTimeout(debounceRef.current)
     debounceRef.current = setTimeout(() => compute(val), 280)
+  }
+
+  function applySuggestion(suggestion: string) {
+    setQuery(suggestion)
+    setSuggestions([])
+    setShowSuggestions(false)
+    compute(suggestion)
+    inputRef.current?.focus()
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -129,10 +158,15 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
+    if (e.key === 'Escape') {
+      setIsOpen(false)
+      setShowSuggestions(false)
+      setActiveIdx(-1)
+      return
+    }
     if (!isOpen) return
     if (e.key === 'ArrowDown') { e.preventDefault(); setActiveIdx((i) => Math.min(i + 1, results.length - 1)) }
     if (e.key === 'ArrowUp')   { e.preventDefault(); setActiveIdx((i) => Math.max(i - 1, -1)) }
-    if (e.key === 'Escape')    { setIsOpen(false); setActiveIdx(-1) }
   }
 
   return (
@@ -168,7 +202,10 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
             value={query}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
-            onFocus={() => query.trim().length >= 3 && results.length > 0 && setIsOpen(true)}
+            onFocus={() => {
+              if (query.trim().length >= 3 && results.length > 0) setIsOpen(true)
+              else if (query.trim().length >= 2 && suggestions.length > 0) setShowSuggestions(true)
+            }}
             placeholder={`Ex: ${PLACEHOLDERS[placeholderIdx]}`}
             className="flex-1 bg-transparent py-4 pr-2 text-base outline-none"
             style={{ color: '#f0f0f8' }}
@@ -178,7 +215,7 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
           {query && (
             <button
               type="button"
-              onClick={() => { setQuery(''); setResults([]); setIsOpen(false); inputRef.current?.focus() }}
+              onClick={() => { setQuery(''); setResults([]); setSuggestions([]); setIsOpen(false); setShowSuggestions(false); inputRef.current?.focus() }}
               className="px-3 text-lg leading-none transition-opacity"
               style={{ color: '#5a5a78' }}
             >
@@ -195,6 +232,40 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
           </button>
         </div>
       </form>
+
+      {/* Suggestions dropdown (shown while typing, before full search) */}
+      {showSuggestions && !isOpen && suggestions.length > 0 && (
+        <div
+          className="absolute left-0 right-0 top-full mt-2 rounded-2xl overflow-hidden z-50"
+          style={{
+            background: '#0f0f1a',
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
+          }}
+        >
+          <div
+            className="px-4 py-2"
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            <span className="text-xs" style={{ color: '#5a5a78' }}>Suggestions populaires</span>
+          </div>
+          {suggestions.map((s) => (
+            <button
+              key={s}
+              onClick={() => applySuggestion(s)}
+              className="w-full text-left px-4 py-2.5 text-sm flex items-center gap-3 transition-colors"
+              style={{ color: '#a8a8c0' }}
+              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.04)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+            >
+              <svg className="w-3.5 h-3.5 shrink-0" style={{ color: '#5a5a78' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              {s}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Results dropdown */}
       {isOpen && results.length > 0 && (
