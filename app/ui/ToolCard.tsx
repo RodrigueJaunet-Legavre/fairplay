@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import type { CatalogTool } from '@/lib/catalog-types'
+import ToolLogo from './ToolLogo'
 
 const PRICING = {
   free:     { bg: 'rgba(16,185,129,0.12)', color: '#34d399', label: 'Gratuit' },
@@ -21,12 +22,7 @@ export default function ToolCard({ tool, featured }: { tool: CatalogTool; featur
       <div className="flex flex-col flex-1 p-5">
         {/* Header row */}
         <div className="flex items-start justify-between gap-2 mb-4">
-          <div
-            className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0 transition-transform group-hover:scale-110"
-            style={{ background: `${tool.color}14` }}
-          >
-            {tool.emoji}
-          </div>
+          <ToolLogo tool={tool} size={48} className="transition-transform group-hover:scale-110" />
           <div className="flex flex-col items-end gap-1.5">
             <span
               className="px-2 py-0.5 rounded-full text-xs font-medium"

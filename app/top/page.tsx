@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/app/ui/AuthProvider'
 import { getTop10ForCategory, TOP_CATEGORIES, type EnrichedTool } from '@/lib/top-tools'
+import ToolLogo from '@/app/ui/ToolLogo'
 
 const PRICING_STYLE = {
   free:     { label: 'Gratuit',  bg: 'rgba(16,185,129,0.12)',  color: '#34d399' },
@@ -110,12 +111,7 @@ function ComparisonTable({ tools, isPremium }: { tools: EnrichedTool[]; isPremiu
                   {/* Tool name */}
                   <td className="px-4 py-3">
                     <Link href={`/tools/${tool.slug}`} className="flex items-center gap-2.5 group">
-                      <div
-                        className="w-8 h-8 rounded-lg flex items-center justify-center text-base shrink-0"
-                        style={{ background: `${tool.color}18` }}
-                      >
-                        {tool.emoji}
-                      </div>
+                      <ToolLogo tool={tool} size={32} />
                       <div>
                         <p className="text-sm font-semibold group-hover:text-violet-400 transition-colors whitespace-nowrap" style={{ color: '#f0f0f8' }}>
                           {tool.name}

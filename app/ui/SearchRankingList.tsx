@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import type { CatalogTool } from '@/lib/catalog-types'
 import { findBestMatches } from '@/lib/matching'
 import type { MatchResult } from '@/lib/matching'
+import ToolLogo from './ToolLogo'
 
 const PRICING_LABEL: Record<CatalogTool['pricing'], { label: string; bg: string; color: string }> = {
   free:     { label: 'Gratuit',  bg: 'rgba(16,185,129,0.12)',  color: '#34d399' },
@@ -111,13 +112,8 @@ function RankingCard({ result, rank }: { result: MatchResult; rank: number }) {
       {/* Content */}
       <div className={`p-5 ${isFirst ? 'sm:p-7' : ''}`}>
         <div className="flex items-start gap-4">
-          {/* Emoji icon */}
-          <div
-            className={`shrink-0 rounded-xl flex items-center justify-center ${isFirst ? 'w-14 h-14 text-3xl' : 'w-11 h-11 text-2xl'}`}
-            style={{ background: `${tool.color}18` }}
-          >
-            {tool.emoji}
-          </div>
+          {/* Logo */}
+          <ToolLogo tool={tool} size={isFirst ? 56 : 44} />
 
           <div className="flex-1 min-w-0">
             {/* Name */}

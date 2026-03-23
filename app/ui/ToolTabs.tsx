@@ -4,6 +4,7 @@ import { useState } from 'react'
 import type { Tool } from '@/lib/tools'
 import type { CatalogTool } from '@/lib/catalog-types'
 import Link from 'next/link'
+import ToolLogo from './ToolLogo'
 
 const PRICING = {
   free:     { bg: 'rgba(16,185,129,0.12)', color: '#34d399', label: 'Gratuit' },
@@ -312,12 +313,7 @@ function AltsTab({ alternatives }: { alternatives: CatalogTool[] }) {
               border: '1px solid rgba(255,255,255,0.07)',
             }}
           >
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
-              style={{ background: `${alt.color}14` }}
-            >
-              {alt.emoji}
-            </div>
+            <ToolLogo tool={alt} size={40} />
             <div className="min-w-0">
               <p className="font-semibold text-sm mb-0.5 group-hover:text-violet-400 transition-colors" style={{ color: '#f0f0f8' }}>
                 {alt.name}

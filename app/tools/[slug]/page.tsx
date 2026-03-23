@@ -4,6 +4,7 @@ import { getToolBySlug, getRelatedTools, tools } from '@/lib/tools'
 import { allCatalogTools, getCatalogToolBySlug } from '@/lib/tools-index'
 import type { CatalogTool } from '@/lib/catalog-types'
 import ToolTabs from '@/app/ui/ToolTabs'
+import ToolLogo from '@/app/ui/ToolLogo'
 
 export function generateStaticParams() {
   const detailedSlugs = tools.map((t) => ({ slug: t.slug }))
@@ -66,12 +67,7 @@ export default async function ToolDetailPage(props: { params: Promise<{ slug: st
 
         <div className="p-8">
           <div className="flex flex-col sm:flex-row sm:items-start gap-6">
-            <div
-              className="w-20 h-20 rounded-2xl flex items-center justify-center text-4xl shrink-0"
-              style={{ background: `${catalogTool.color}14` }}
-            >
-              {catalogTool.emoji}
-            </div>
+            <ToolLogo tool={catalogTool} size={80} className="rounded-2xl" />
 
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-2 mb-2">
@@ -174,12 +170,7 @@ function CatalogOverview({ tool, related }: { tool: CatalogTool; related: Catalo
                 className="flex items-start gap-3 p-4 rounded-xl transition-all group"
                 style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.07)' }}
               >
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0"
-                  style={{ background: `${alt.color}14` }}
-                >
-                  {alt.emoji}
-                </div>
+                <ToolLogo tool={alt} size={40} />
                 <div className="min-w-0">
                   <p className="font-semibold text-sm mb-0.5 group-hover:text-violet-400 transition-colors" style={{ color: '#f0f0f8' }}>
                     {alt.name}

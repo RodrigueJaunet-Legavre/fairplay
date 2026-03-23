@@ -1,20 +1,17 @@
 import Link from 'next/link'
 import { getFeaturedTools, tools } from '@/lib/tools'
-import { allCatalogTools, catalogCategories } from '@/lib/tools-index'
+import { allCatalogTools } from '@/lib/tools-index'
 import type { CatalogTool } from '@/lib/catalog-types'
 import ToolCard from '@/app/ui/ToolCard'
 import SmartSearch from '@/app/ui/SmartSearch'
+import HomeCategoryGrid from '@/app/ui/HomeCategoryGrid'
+import ToolLogo from '@/app/ui/ToolLogo'
 
 const allTools: CatalogTool[] = [
   ...(tools as unknown as CatalogTool[]),
   ...allCatalogTools,
 ]
 
-const CAT_ICONS: Record<string, string> = {
-  writing: '✍️', image: '🎨', code: '💻', video: '🎬',
-  audio: '🎙️', marketing: '📢', productivity: '⚡', research: '🔬',
-  chat: '💬', design: '🎭',
-}
 
 export default function HomePage() {
   const featured = getFeaturedTools()
@@ -131,7 +128,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
             {[
               { value: `${allTools.length}+`, label: 'Outils IA' },
-              { value: `${catalogCategories.length - 1}`, label: 'Catégories' },
+              { value: '13', label: 'Catégories' },
               { value: '500M+', label: 'Utilisateurs actifs' },
               { value: '4.5★', label: 'Note moyenne' },
             ].map(({ value, label }) => (
@@ -147,35 +144,7 @@ export default function HomePage() {
       {/* ── Categories ───────────────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <h2 className="text-xl font-bold mb-6" style={{ color: '#f0f0f8' }}>Explorer par catégorie</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-3">
-          {catalogCategories.slice(1).map((cat) => {
-            const count = allTools.filter((t) => t.category === cat.slug).length
-            return (
-              <Link
-                key={cat.slug}
-                href={`/tools?category=${cat.slug}`}
-                className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all group"
-                style={{
-                  background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.06)',
-                }}
-              >
-                <span className="text-2xl group-hover:scale-110 transition-transform">
-                  {CAT_ICONS[cat.slug]}
-                </span>
-                <span className="text-xs font-medium text-center leading-tight" style={{ color: '#d1d5db' }}>
-                  {cat.label}
-                </span>
-                <span
-                  className="text-xs px-1.5 py-0.5 rounded-full"
-                  style={{ background: 'rgba(124,58,237,0.1)', color: '#a78bfa' }}
-                >
-                  {count}
-                </span>
-              </Link>
-            )
-          })}
-        </div>
+        <HomeCategoryGrid />
       </section>
 
       {/* ── Featured ─────────────────────────────────────────── */}
@@ -232,12 +201,7 @@ export default function HomePage() {
                 </span>
 
                 {/* Logo */}
-                <div
-                  className="w-11 h-11 rounded-xl flex items-center justify-center text-xl shrink-0"
-                  style={{ background: `${tool.color}14` }}
-                >
-                  {tool.emoji}
-                </div>
+                <ToolLogo tool={tool} size={44} />
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">

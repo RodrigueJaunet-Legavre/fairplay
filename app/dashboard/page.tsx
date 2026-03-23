@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/app/ui/AuthProvider'
 import { supabase } from '@/lib/supabase'
 import { getToolsForProfession, PROFESSIONS } from '@/lib/professions'
+import ToolLogo from '@/app/ui/ToolLogo'
 import type { CatalogTool } from '@/lib/catalog-types'
 import type { User } from '@supabase/supabase-js'
 
@@ -194,12 +195,7 @@ function ToolCard({ tool }: { tool: CatalogTool }) {
         style={{ background: `linear-gradient(90deg, ${tool.color}, transparent)` }}
       />
       <div className="flex items-start gap-3 mb-3">
-        <div
-          className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl shrink-0"
-          style={{ background: `${tool.color}14` }}
-        >
-          {tool.emoji}
-        </div>
+        <ToolLogo tool={tool} size={44} />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
             <p className="font-bold text-sm group-hover:text-violet-400 transition-colors" style={{ color: '#f0f0f8' }}>

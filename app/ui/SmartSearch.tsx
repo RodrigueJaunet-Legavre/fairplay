@@ -7,6 +7,7 @@ import type { MatchResult } from '@/lib/matching'
 import { getSuggestions } from '@/lib/synonyms'
 import { useAuth } from './AuthProvider'
 import FreemiumModal from './FreemiumModal'
+import ToolLogo from './ToolLogo'
 
 const ANON_LIMIT = 1
 const FREE_DAILY_LIMIT = 3
@@ -343,12 +344,9 @@ function SearchResult({
       }}
     >
       <div className="flex items-start gap-3">
-        {/* Emoji */}
-        <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center text-xl shrink-0 mt-0.5"
-          style={{ background: `${tool.color}18` }}
-        >
-          {tool.emoji}
+        {/* Logo */}
+        <div className="mt-0.5">
+          <ToolLogo tool={tool} size={40} />
         </div>
 
         {/* Content */}
