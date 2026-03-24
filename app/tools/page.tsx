@@ -4,9 +4,10 @@ import { allCatalogTools } from '@/lib/tools-index'
 import type { CatalogTool } from '@/lib/catalog-types'
 import ToolsGrid from '@/app/ui/ToolsGrid'
 
+const detailedSlugs = new Set(tools.map((t) => t.slug))
 const allTools: CatalogTool[] = [
   ...(tools as unknown as CatalogTool[]),
-  ...allCatalogTools,
+  ...allCatalogTools.filter((t) => !detailedSlugs.has(t.slug)),
 ]
 
 export const metadata = {

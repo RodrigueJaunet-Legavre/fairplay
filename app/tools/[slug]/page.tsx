@@ -5,6 +5,7 @@ import { allCatalogTools, getCatalogToolBySlug } from '@/lib/tools-index'
 import type { CatalogTool } from '@/lib/catalog-types'
 import ToolTabs from '@/app/ui/ToolTabs'
 import ToolLogo from '@/app/ui/ToolLogo'
+import ReviewSection from '@/app/ui/ReviewSection'
 
 export function generateStaticParams() {
   const detailedSlugs = tools.map((t) => ({ slug: t.slug }))
@@ -129,6 +130,11 @@ export default async function ToolDetailPage(props: { params: Promise<{ slug: st
       ) : (
         <CatalogOverview tool={catalogTool} related={relatedTools} />
       )}
+
+      {/* Reviews */}
+      <div className="mt-6">
+        <ReviewSection toolSlug={catalogTool.slug} />
+      </div>
     </div>
   )
 }

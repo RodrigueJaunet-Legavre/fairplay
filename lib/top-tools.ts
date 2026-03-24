@@ -70,7 +70,6 @@ const ENRICHMENT: Record<string, { ease_of_use: number; results_quality: number;
   'bolt-new':         { ease_of_use: 5, results_quality: 4, french_support: true,  ideal_for: 'No-code' },
   'v0':               { ease_of_use: 4, results_quality: 5, french_support: true,  ideal_for: 'Dev frontend' },
   'replit-ai':        { ease_of_use: 5, results_quality: 4, french_support: true,  ideal_for: 'Débutants dev' },
-  'phind':            { ease_of_use: 5, results_quality: 4, french_support: false, ideal_for: 'Développeurs' },
   'aider':            { ease_of_use: 3, results_quality: 5, french_support: true,  ideal_for: 'Dev avancés' },
   'warp':             { ease_of_use: 4, results_quality: 4, french_support: true,  ideal_for: 'Dev terminal' },
 

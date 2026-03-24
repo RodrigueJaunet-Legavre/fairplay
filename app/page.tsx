@@ -7,9 +7,10 @@ import SmartSearch from '@/app/ui/SmartSearch'
 import HomeCategoryGrid from '@/app/ui/HomeCategoryGrid'
 import ToolLogo from '@/app/ui/ToolLogo'
 
+const detailedSlugs = new Set(tools.map((t) => t.slug))
 const allTools: CatalogTool[] = [
   ...(tools as unknown as CatalogTool[]),
-  ...allCatalogTools,
+  ...allCatalogTools.filter((t) => !detailedSlugs.has(t.slug)),
 ]
 
 

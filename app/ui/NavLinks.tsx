@@ -6,7 +6,7 @@ import { useAuth } from './AuthProvider'
 
 const BASE_LINKS = [
   { href: '/',          label: 'Accueil' },
-  { href: '/top',       label: 'Classement' },
+  { href: '/metiers',   label: 'Métiers' },
   { href: '/decouvrir', label: 'Découverte' },
 ]
 
