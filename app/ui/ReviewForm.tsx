@@ -71,6 +71,7 @@ export default function ReviewForm({ toolSlug, metierSlug, onReviewAdded }: Prop
     if (!user || note === 0 || !supabase) return
     setSubmitting(true)
     setError(null)
+    console.log('[ReviewForm] inserting for tool_slug:', toolSlug)
     const { error: err } = await supabase.from('reviews').insert({
       user_id: user.id,
       tool_slug: toolSlug ?? null,
@@ -80,10 +81,12 @@ export default function ReviewForm({ toolSlug, metierSlug, onReviewAdded }: Prop
     })
     setSubmitting(false)
     if (err) {
-      setError('Erreur lors de l\'envoi. Réessayez.')
+      console.error('[ReviewForm] insert error:', err)
+      setError(`Erreur: ${err.message}`)
     } else {
       setSubmitted(true)
       onReviewAdded?.()
+      window.dispatchEvent(new CustomEvent('fairplay:review-added', { detail: { toolSlug } }))
     }
   }
 

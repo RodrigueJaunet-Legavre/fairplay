@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useAuth } from '@/app/ui/AuthProvider'
 import { getTop10ForCategory, TOP_CATEGORIES, type EnrichedTool } from '@/lib/top-tools'
 import ToolLogo from '@/app/ui/ToolLogo'
+import { useToolRating } from '@/app/ui/DynamicRating'
 
 const PRICING_STYLE = {
   free:     { label: 'Gratuit',  bg: 'rgba(16,185,129,0.12)',  color: '#34d399' },
@@ -18,6 +19,18 @@ function Stars({ value }: { value: number }) {
       {Array.from({ length: 5 }, (_, i) => (
         <span key={i} style={{ color: i < value ? '#fbbf24' : '#2a2a3a', fontSize: 12 }}>★</span>
       ))}
+    </span>
+  )
+}
+
+function RatingCell({ slug, fallback }: { slug: string; fallback: number }) {
+  const { avg, count, hasFairplayReviews } = useToolRating(slug, fallback)
+  return (
+    <span className="text-sm font-bold" style={{ color: '#f0f0f8' }}>
+      ★ {avg.toFixed(1)}
+      {hasFairplayReviews && (
+        <span className="text-xs font-normal ml-1" style={{ color: '#5a5a78' }}>{count} avis</span>
+      )}
     </span>
   )
 }
@@ -123,7 +136,7 @@ function ComparisonTable({ tools, isPremium }: { tools: EnrichedTool[]; isPremiu
 
                   {/* Rating */}
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <span className="text-sm font-bold" style={{ color: '#f0f0f8' }}>★ {tool.rating}</span>
+                    <RatingCell slug={tool.slug} fallback={tool.rating} />
                   </td>
 
                   {/* Pricing */}

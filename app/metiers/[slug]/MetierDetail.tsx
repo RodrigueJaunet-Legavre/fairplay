@@ -7,10 +7,11 @@ import {
   Clock, Wallet, Check, ChevronRight,
 } from 'lucide-react'
 import type { Metier } from '@/lib/metiers'
-import { getMetierTop5Tools } from '@/lib/metiers'
+import { getMetierTop5Tools, scoreToolForMetier } from '@/lib/metiers'
 import ToolLogo from '@/app/ui/ToolLogo'
 import ReviewSection from '@/app/ui/ReviewSection'
 import FavoriteButton from '@/app/ui/FavoriteButton'
+import { RatingBadge } from '@/app/ui/DynamicRating'
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; style?: React.CSSProperties; className?: string }>> = {
   Stethoscope, Scale, TrendingUp, GraduationCap, Code2, Megaphone,
@@ -105,6 +106,7 @@ export default function MetierDetail({ metier }: { metier: Metier }) {
         <div className="space-y-3">
           {tools.map((tool, i) => {
             const p = PRICING_STYLE[tool.pricing]
+            const isSpecialized = scoreToolForMetier(tool, metier.slug) >= 10
             return (
               <Link
                 key={tool.slug}
@@ -133,7 +135,22 @@ export default function MetierDetail({ metier }: { metier: Metier }) {
                     >
                       {p.label}
                     </span>
-                    <span className="text-xs" style={{ color: '#3a3a50' }}>★ {tool.rating}</span>
+                    {isSpecialized ? (
+                      <span
+                        className="text-xs px-2 py-0.5 rounded-full font-medium"
+                        style={{ background: 'rgba(52,211,153,0.12)', color: '#34d399' }}
+                      >
+                        ✦ Spécialisé
+                      </span>
+                    ) : (
+                      <span
+                        className="text-xs px-2 py-0.5 rounded-full"
+                        style={{ background: 'rgba(255,255,255,0.05)', color: '#5a5a78' }}
+                      >
+                        Généraliste
+                      </span>
+                    )}
+                    <RatingBadge toolSlug={tool.slug} fallback={tool.rating} className="text-xs" />
                   </div>
                   <p className="text-sm mb-1" style={{ color: '#5a5a78' }}>{tool.tagline}</p>
                   <p className="text-xs" style={{ color: '#a78bfa' }}>{TOOL_DESCS[i]}</p>

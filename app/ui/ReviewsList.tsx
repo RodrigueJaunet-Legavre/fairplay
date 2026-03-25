@@ -25,16 +25,18 @@ export default function ReviewsList({ toolSlug, metierSlug, refreshKey }: Props)
     if (!supabase) { setLoading(false); return }
     setLoading(true)
 
+    console.log('[ReviewsList] fetching for tool_slug:', toolSlug, 'metier_slug:', metierSlug)
     let query = supabase
       .from('reviews')
-      .select('id, note, texte, created_at, profiles(metier)')
+      .select('id, note, texte, created_at, metier_user')
       .order('created_at', { ascending: false })
       .limit(20)
 
     if (toolSlug) query = query.eq('tool_slug', toolSlug)
     if (metierSlug) query = query.eq('metier_slug', metierSlug)
 
-    const { data } = await query
+    const { data, error } = await query
+    if (error) console.error('[ReviewsList] fetch error:', error)
     if (data) {
       setReviews(
         data.map((r: Record<string, unknown>) => ({
@@ -42,7 +44,7 @@ export default function ReviewsList({ toolSlug, metierSlug, refreshKey }: Props)
           note: r.note as number,
           texte: r.texte as string | null,
           created_at: r.created_at as string,
-          user_metier: (r.profiles as Record<string, unknown> | null)?.metier as string | null ?? null,
+          user_metier: r.metier_user as string | null ?? null,
         }))
       )
     }

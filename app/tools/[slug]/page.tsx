@@ -7,6 +7,7 @@ import ToolTabs from '@/app/ui/ToolTabs'
 import ToolLogo from '@/app/ui/ToolLogo'
 import ReviewSection from '@/app/ui/ReviewSection'
 import FavoriteButton from '@/app/ui/FavoriteButton'
+import { DynamicRatingChip } from '@/app/ui/DynamicRating'
 
 export function generateStaticParams() {
   const detailedSlugs = tools.map((t) => ({ slug: t.slug }))
@@ -94,7 +95,7 @@ export default async function ToolDetailPage(props: { params: Promise<{ slug: st
 
               <div className="flex flex-wrap gap-2 text-sm">
                 <Chip>{catalogTool.pricingDetail}</Chip>
-                <Chip>★ {catalogTool.rating} / 5</Chip>
+                <DynamicRatingChip toolSlug={catalogTool.slug} fallback={catalogTool.rating} />
                 {catalogTool.users && <Chip>{catalogTool.users} utilisateurs</Chip>}
                 <Chip>▲ {catalogTool.upvotes.toLocaleString('fr')} votes</Chip>
               </div>

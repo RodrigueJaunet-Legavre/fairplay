@@ -143,7 +143,7 @@ export const METIERS: Metier[] = [
     name: 'Avocat',
     sector: 'Droit',
     icon: 'Scale',
-    top5: ['chatgpt', 'claude-ai', 'perplexity', 'deepl', 'grammarly-ai'],
+    top5: ['harvey-ai', 'clio-ai', 'luminance', 'lexisnexis-ai', 'claude-ai'],
     useCases: [
       'Rédiger des conclusions et actes juridiques plus rapidement',
       'Résumer et analyser des jurisprudences volumineuses',
@@ -164,7 +164,7 @@ export const METIERS: Metier[] = [
     name: 'Notaire',
     sector: 'Droit',
     icon: 'Scale',
-    top5: ['chatgpt', 'claude-ai', 'deepl', 'notion-ai', 'grammarly-ai'],
+    top5: ['harvey-ai', 'luminance', 'lexisnexis-ai', 'claude-ai', 'notion-ai'],
     useCases: [
       'Rédiger les actes notariés (vente, donation, testament)',
       'Expliquer clairement les actes aux clients',
@@ -204,7 +204,7 @@ export const METIERS: Metier[] = [
     name: 'Juriste d\'entreprise',
     sector: 'Droit',
     icon: 'Scale',
-    top5: ['chatgpt', 'claude-ai', 'perplexity', 'deepl', 'elicit-org'],
+    top5: ['harvey-ai', 'luminance', 'lexisnexis-ai', 'claude-ai', 'perplexity'],
     useCases: [
       'Rédiger et analyser des contrats commerciaux',
       'Effectuer une veille réglementaire et juridique',
@@ -348,7 +348,7 @@ export const METIERS: Metier[] = [
     name: 'Professeur',
     sector: 'Éducation',
     icon: 'GraduationCap',
-    top5: ['chatgpt', 'notion-ai', 'canva-ai', 'grammarly-ai', 'duolingo-ai'],
+    top5: ['khanmigo', 'eduaide-ai', 'magicschool-ai', 'chatgpt', 'canva-ai'],
     useCases: [
       'Créer des cours, exercices et évaluations en quelques minutes',
       'Différencier les supports selon les niveaux des élèves',
@@ -368,7 +368,7 @@ export const METIERS: Metier[] = [
     name: 'Formateur',
     sector: 'Éducation',
     icon: 'GraduationCap',
-    top5: ['synthesia', 'chatgpt', 'canva-ai', 'gamma-app', 'notion-ai'],
+    top5: ['eduaide-ai', 'magicschool-ai', 'khanmigo', 'synthesia', 'chatgpt'],
     useCases: [
       'Créer des modules e-learning avec avatars IA',
       'Concevoir des supports de formation attractifs',
@@ -408,7 +408,7 @@ export const METIERS: Metier[] = [
     name: 'Tuteur / Répétiteur',
     sector: 'Éducation',
     icon: 'GraduationCap',
-    top5: ['chatgpt', 'perplexity', 'notion-ai', 'grammarly-ai', 'duolingo-ai'],
+    top5: ['khanmigo', 'diffit-ai', 'eduaide-ai', 'chatgpt', 'perplexity'],
     useCases: [
       'Créer des exercices adaptés au niveau de l\'élève',
       'Expliquer des concepts difficiles différemment',
@@ -428,7 +428,7 @@ export const METIERS: Metier[] = [
     name: 'Directeur d\'école',
     sector: 'Éducation',
     icon: 'GraduationCap',
-    top5: ['chatgpt', 'notion-ai', 'gamma-app', 'otter-ai', 'grammarly-ai'],
+    top5: ['magicschool-ai', 'khanmigo', 'chatgpt', 'notion-ai', 'gamma-app'],
     useCases: [
       'Rédiger les communications aux parents et enseignants',
       'Créer des rapports d\'activité et bilans pédagogiques',
@@ -450,7 +450,7 @@ export const METIERS: Metier[] = [
     name: 'Développeur',
     sector: 'Tech',
     icon: 'Code2',
-    top5: ['github-copilot', 'cursor', 'chatgpt', 'perplexity', 'warp'],
+    top5: ['github-copilot', 'cursor', 'codeium', 'tabnine', 'perplexity'],
     useCases: [
       'Autocomplétion et génération de code intelligente',
       'Débogage et explication des erreurs',
@@ -840,7 +840,7 @@ export const METIERS: Metier[] = [
     name: 'Plombier',
     sector: 'Artisanat',
     icon: 'Hammer',
-    top5: ['chatgpt', 'canva-ai', 'notion-ai', 'grammarly-ai', 'gamma-app'],
+    top5: ['jobber-ai', 'servicetitan-ai', 'chatgpt', 'canva-ai', 'notion-ai'],
     useCases: [
       'Rédiger les devis et factures professionnels',
       'Créer des fiches d\'intervention et rapports',
@@ -860,7 +860,7 @@ export const METIERS: Metier[] = [
     name: 'Électricien',
     sector: 'Artisanat',
     icon: 'Hammer',
-    top5: ['chatgpt', 'notion-ai', 'canva-ai', 'grammarly-ai', 'claude-ai'],
+    top5: ['jobber-ai', 'servicetitan-ai', 'chatgpt', 'notion-ai', 'canva-ai'],
     useCases: [
       'Rédiger les rapports d\'intervention et attestations',
       'Créer les devis détaillés pour les clients',
@@ -880,7 +880,7 @@ export const METIERS: Metier[] = [
     name: 'Menuisier',
     sector: 'Artisanat',
     icon: 'Hammer',
-    top5: ['chatgpt', 'canva-ai', 'midjourney', 'notion-ai', 'grammarly-ai'],
+    top5: ['jobber-ai', 'chatgpt', 'canva-ai', 'midjourney', 'notion-ai'],
     useCases: [
       'Générer des visualisations de meubles sur mesure',
       'Rédiger des devis et plans de fabrication clairs',
@@ -900,7 +900,7 @@ export const METIERS: Metier[] = [
     name: 'Maçon',
     sector: 'Artisanat',
     icon: 'Hammer',
-    top5: ['chatgpt', 'canva-ai', 'notion-ai', 'gamma-app', 'grammarly-ai'],
+    top5: ['jobber-ai', 'chatgpt', 'canva-ai', 'notion-ai', 'gamma-app'],
     useCases: [
       'Rédiger les devis de chantier détaillés',
       'Créer les plans de chantier et fiches techniques',
@@ -920,7 +920,7 @@ export const METIERS: Metier[] = [
     name: 'Peintre en bâtiment',
     sector: 'Artisanat',
     icon: 'Hammer',
-    top5: ['chatgpt', 'midjourney', 'canva-ai', 'adobe-firefly', 'ideogram'],
+    top5: ['jobber-ai', 'chatgpt', 'midjourney', 'canva-ai', 'adobe-firefly'],
     useCases: [
       'Générer des simulations de couleurs pour les clients',
       'Créer des devis avec descriptif des travaux',
@@ -942,7 +942,7 @@ export const METIERS: Metier[] = [
     name: 'Chef cuisinier',
     sector: 'Restauration',
     icon: 'ChefHat',
-    top5: ['chatgpt', 'midjourney', 'canva-ai', 'notion-ai', 'claude-ai'],
+    top5: ['plant-jammer', 'winnow', 'chatgpt', 'midjourney', 'notion-ai'],
     useCases: [
       'Créer et optimiser des recettes selon les contraintes',
       'Concevoir des menus saisonniers équilibrés',
@@ -962,7 +962,7 @@ export const METIERS: Metier[] = [
     name: 'Restaurateur',
     sector: 'Restauration',
     icon: 'ChefHat',
-    top5: ['chatgpt', 'canva-ai', 'notion-ai', 'mailchimp-ai', 'predis-ai'],
+    top5: ['winnow', 'marketman', 'plant-jammer', 'canva-ai', 'predis-ai'],
     useCases: [
       'Gérer la communication et les réseaux sociaux',
       'Rédiger les menus et descriptions de plats',
@@ -1044,7 +1044,7 @@ export const METIERS: Metier[] = [
     name: 'Agent immobilier',
     sector: 'Immobilier',
     icon: 'Home',
-    top5: ['chatgpt', 'canva-ai', 'notion-ai', 'mailchimp-ai', 'gamma-app'],
+    top5: ['likely-ai', 'structurely', 'roof-ai', 'chatgpt', 'canva-ai'],
     useCases: [
       'Rédiger des annonces immobilières percutantes',
       'Préparer les dossiers de vente et compromis',
@@ -1249,7 +1249,7 @@ export const METIERS: Metier[] = [
     name: 'Directeur des Ressources Humaines',
     sector: 'RH',
     icon: 'Users',
-    top5: ['chatgpt', 'lattice-ai', 'monday-ai', 'notion-ai', 'otter-ai'],
+    top5: ['eightfold-ai', 'beamery', 'paradox-ai', 'lattice-ai', 'chatgpt'],
     useCases: [
       'Rédiger les politiques RH et règlements intérieurs',
       'Analyser les données RH et préparer les reportings',
@@ -1401,8 +1401,20 @@ export function getMetiersBySector(sector: string): Metier[] {
   return METIERS.filter((m) => m.sector === sector)
 }
 
+const GENERALIST_SLUGS = new Set([
+  'chatgpt', 'claude-ai', 'gemini', 'mistral-ai', 'microsoft-copilot', 'grok', 'meta-ai', 'le-chat',
+])
+
+export function scoreToolForMetier(tool: CatalogTool, metierSlug: string): number {
+  let score = 0
+  if (tool.specialites?.includes(metierSlug)) score += 10
+  if (GENERALIST_SLUGS.has(tool.slug)) score -= 2
+  return score
+}
+
 export function getMetierTop5Tools(metier: Metier): CatalogTool[] {
   return metier.top5
     .map((slug) => getCatalogToolBySlug(slug))
     .filter((t): t is CatalogTool => t !== undefined)
+    .sort((a, b) => scoreToolForMetier(b, metier.slug) - scoreToolForMetier(a, metier.slug))
 }

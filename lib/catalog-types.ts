@@ -15,6 +15,7 @@ export type CatalogTool = {
   upvotes: number
   users?: string
   featured?: boolean
+  specialites?: string[]
 }
 
 export function t(

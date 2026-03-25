@@ -625,6 +625,156 @@ const tools: CatalogTool[] = [
   t('litmaps','Litmaps','Cartographie de la littérature scientifique par IA','recherche','',
     'freemium','Gratuit · Pro à 10 $/mois',
     ['carte','littérature','visualisation','citations','découverte'],4.4,'https://litmaps.com','🗺','#26c6da',2500,'100K+'),
+
+  // ── Droit & Juridique ────────────────────────────────────────────────────────
+  t('harvey-ai','Harvey AI','IA juridique spécialisée pour cabinets d\'avocats','business','',
+    'paid','Entreprise uniquement',
+    ['juridique','contrats','recherche','avocats','analyse'],4.6,'https://harvey.ai','⚖️','#1a1a2e',3200,'1K+'),
+  t('clio-ai','Clio','Gestion de cabinet juridique avec IA intégrée','business','',
+    'paid','Starter à 49 $/mois',
+    ['gestion','cabinet','facturation','dossiers','juridique'],4.4,'https://clio.com','📁','#3b82f6',4100,'150K+'),
+  t('luminance','Luminance','Analyse et révision de contrats juridiques par IA','business','',
+    'paid','Entreprise uniquement',
+    ['contrats','analyse','due diligence','juridique','nlp'],4.5,'https://luminance.com','🔦','#6366f1',1800,'300+'),
+  t('donotpay','DoNotPay','IA pour défendre vos droits et contester des décisions','business','',
+    'paid','36 $/an',
+    ['droits','contestation','consommateurs','juridique','automatisation'],4.2,'https://donotpay.com','🚫','#ef5350',3600,'1M+'),
+  t('lexisnexis-ai','LexisNexis AI','Recherche juridique et analyse de jurisprudence par IA','business','',
+    'paid','Entreprise uniquement',
+    ['jurisprudence','recherche','juridique','législation','analyse'],4.6,'https://lexisnexis.com','📚','#e53935',2900,'500K+'),
+
+  // ── Éducation ────────────────────────────────────────────────────────────────
+  t('khanmigo','Khanmigo','Tuteur IA de Khan Academy pour élèves et enseignants','rh','',
+    'freemium','Gratuit · Enseignants prioritaires',
+    ['tuteur','élèves','enseignants','pédagogie','cours'],4.7,'https://khanmigo.ai','🎓','#1db954',5200,'500K+'),
+  t('eduaide-ai','Eduaide.ai','Générateur de ressources pédagogiques par IA','rh','',
+    'freemium','Gratuit · Pro à 8,99 $/mois',
+    ['cours','fiches','exercices','enseignants','ressources'],4.6,'https://eduaide.ai','📝','#845ef7',3100,'200K+'),
+  t('magicschool-ai','MagicSchool.ai','Suite IA complète pour les enseignants','rh','',
+    'freemium','Gratuit · Pro à 9,99 $/mois',
+    ['enseignants','cours','bulletins','différenciation','évaluation'],4.7,'https://magicschool.ai','🪄','#ff6b35',4800,'3M+'),
+  t('diffit-ai','Diffit','Différenciation pédagogique IA pour adapter les textes','rh','',
+    'freemium','Gratuit · Teacher à 12,99 $/mois',
+    ['différenciation','lecture','niveau','textes','enseignants'],4.5,'https://diffit.me','🎯','#4285f4',2600,'500K+'),
+  t('beamery','Beamery','Gestion des talents et recrutement proactif par IA','rh','',
+    'paid','Entreprise uniquement',
+    ['talent','recrutement','pipeline','diversité','ia'],4.4,'https://beamery.com','💡','#6366f1',1900,'500+'),
+
+  // ── Design & Architecture ────────────────────────────────────────────────────
+  t('arko-ai','Arko AI','Génération de concepts architecturaux par IA','design','',
+    'freemium','Gratuit · Pro à 29 $/mois',
+    ['architecture','concept','3d','rendu','design'],4.4,'https://arko.ai','🏛','#6366f1',1800,'10K+'),
+  t('maket-ai','Maket','Génération de plans d\'étage et maquettes par IA','design','',
+    'freemium','Gratuit · Starter à 15 $/mois',
+    ['plans','étage','architecture','maquettes','génération'],4.3,'https://maket.ai','📐','#3b82f6',2100,'30K+'),
+  t('testfit','TestFit','Optimisation foncière et faisabilité architecturale par IA','design','',
+    'paid','Entreprise uniquement',
+    ['faisabilité','foncier','promotion','architecture','optimisation'],4.5,'https://testfit.io','🏗','#10a37f',1400,'500+'),
+
+  // ── Immobilier, Artisanat & Restauration ────────────────────────────────────
+  t('likely-ai','Likely.AI','Prédiction de leads immobiliers et comportements vendeurs','business','',
+    'paid','Starter à 99 $/mois',
+    ['leads','immobilier','prédiction','vendeurs','ciblage'],4.4,'https://likely.ai','🏠','#4caf50',1600,'500+'),
+  t('structurely','Structurely','Chatbot IA de qualification de leads immobiliers','business','',
+    'paid','Starter à 99 $/mois',
+    ['chatbot','leads','qualification','immobilier','suivi'],4.3,'https://structurely.com','🤖','#3b82f6',1400,'500+'),
+  t('roof-ai','Roof AI','Conversion et engagement client pour agents immobiliers','business','',
+    'paid','Entreprise uniquement',
+    ['conversion','chat','immobilier','leads','engagement'],4.3,'https://roof.ai','🏡','#ff6b35',1100,'200+'),
+  t('jobber-ai','Jobber AI','Gestion de chantiers et devis pour artisans par IA','business','',
+    'freemium','Gratuit · Core à 19 $/mois',
+    ['devis','chantier','artisan','planning','facturation'],4.6,'https://getjobber.com','🔨','#f59e0b',5800,'200K+'),
+  t('servicetitan-ai','ServiceTitan AI','ERP pour artisans du bâtiment avec IA intégrée','business','',
+    'paid','Entreprise uniquement',
+    ['erp','artisan','plombier','électricien','gestion'],4.4,'https://servicetitan.com','🔧','#3b82f6',3200,'5K+'),
+  t('plant-jammer','Plant Jammer','Génération de recettes IA personnalisées pour chefs','business','',
+    'freemium','Gratuit · Pro disponible',
+    ['recettes','cuisine','génération','ingrédients','chef'],4.3,'https://plantjammer.com','🍽','#4caf50',1900,'100K+'),
+  t('winnow','Winnow','Réduction du gaspillage alimentaire en restauration par IA','business','',
+    'paid','Entreprise uniquement',
+    ['gaspillage','restauration','cuisine','analyse','durabilité'],4.4,'https://winnowsolutions.com','♻️','#00c853',1700,'500+'),
+  t('marketman','MarketMan','Gestion des stocks et des fournisseurs pour restaurants','business','',
+    'paid','Starter à 239 $/mois',
+    ['stocks','fournisseurs','restaurant','coût','inventaire'],4.3,'https://marketman.com','📦','#ff6b35',1500,'500+'),
+  t('feedly-ai','Feedly AI','Veille presse et curation de contenu IA pour journalistes','business','',
+    'freemium','Gratuit · Pro à 8 $/mois',
+    ['veille','presse','curation','actualités','journaliste'],4.5,'https://feedly.com','📰','#2bb24c',6200,'10M+'),
 ]
+
+// ── Spécialisations par métier ───────────────────────────────────────────────
+const SPECIALITES: Record<string, string[]> = {
+  // Santé
+  'nabla-ai':        ['medecin','infirmier','kinesitherapeute','dentiste'],
+  'nuance-dax':      ['medecin','infirmier'],
+  'suki-ai':         ['medecin','infirmier'],
+  'glass-health':    ['medecin','infirmier'],
+  'ada-health':      ['medecin','infirmier','pharmacien'],
+  'infermedica':     ['medecin','infirmier','pharmacien'],
+  'corti-ai':        ['medecin','infirmier'],
+  'regard-health':   ['medecin','infirmier'],
+  // Droit
+  'harvey-ai':       ['avocat','juriste','notaire'],
+  'clio-ai':         ['avocat'],
+  'luminance':       ['avocat','juriste','notaire'],
+  'donotpay':        ['avocat'],
+  'lexisnexis-ai':   ['avocat','juriste','notaire','huissier'],
+  // Finance
+  'vic-ai':          ['comptable','expert-comptable'],
+  'trullion':        ['comptable','expert-comptable'],
+  'zeni-ai':         ['comptable','expert-comptable','auto-entrepreneur'],
+  'docyt':           ['comptable','expert-comptable'],
+  'kensho':          ['banquier','conseiller-financier'],
+  'ramp-ai':         ['comptable','expert-comptable'],
+  'brex-ai':         ['comptable','expert-comptable','auto-entrepreneur'],
+  'puzzle-io':       ['comptable','expert-comptable','auto-entrepreneur'],
+  // RH / Recrutement
+  'eightfold-ai':    ['recruteur','drh','charge-de-formation'],
+  'hirevue':         ['recruteur','drh'],
+  'paradox-ai':      ['recruteur','drh'],
+  'beamery':         ['recruteur','drh'],
+  'leena-ai':        ['drh','gestionnaire-de-paie'],
+  'deel-ai':         ['drh','gestionnaire-de-paie'],
+  // Éducation
+  'khanmigo':        ['professeur','formateur','tuteur'],
+  'eduaide-ai':      ['professeur','formateur'],
+  'magicschool-ai':  ['professeur','formateur','directeur-ecole'],
+  'diffit-ai':       ['professeur','formateur'],
+  // Code
+  'github-copilot':  ['developpeur','devops','data-scientist'],
+  'cursor':          ['developpeur'],
+  'codeium':         ['developpeur'],
+  'tabnine':         ['developpeur'],
+  'replit-ai':       ['developpeur'],
+  // Marketing / Rédaction
+  'surfer-seo':      ['seo','redacteur-web'],
+  'jasper-ai':       ['redacteur-web','community-manager','chef-de-pub'],
+  'adcreative-ai':   ['chef-de-pub','community-manager','graphiste'],
+  'predis-ai':       ['community-manager','chef-de-pub'],
+  // Design / Architecture
+  'midjourney':      ['graphiste','architecte','designer-ux'],
+  'arko-ai':         ['architecte'],
+  'maket-ai':        ['architecte','promoteur'],
+  'testfit':         ['promoteur','architecte'],
+  // Journaliste / Médias
+  'otter-ai':        ['journaliste','podcaster'],
+  'descript':        ['journaliste','videastes','podcaster'],
+  'perplexity':      ['journaliste'],
+  'feedly-ai':       ['journaliste'],
+  // Restauration
+  'plant-jammer':    ['chef-cuisinier','restaurateur','patissier'],
+  'winnow':          ['restaurateur','chef-cuisinier'],
+  'marketman':       ['restaurateur'],
+  // Immobilier
+  'likely-ai':       ['agent-immobilier'],
+  'structurely':     ['agent-immobilier'],
+  'roof-ai':         ['agent-immobilier'],
+  // Artisanat
+  'jobber-ai':       ['plombier','electricien','menuisier','macon','peintre'],
+  'servicetitan-ai': ['plombier','electricien'],
+}
+
+tools.forEach((tool) => {
+  if (SPECIALITES[tool.slug]) tool.specialites = SPECIALITES[tool.slug]
+})
 
 export default tools

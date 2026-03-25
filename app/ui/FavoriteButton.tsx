@@ -20,6 +20,7 @@ export default function FavoriteButton({ toolSlug, fullWidth = false }: Props) {
   const [bursting, setBursting] = useState(false)
   const [hovered, setHovered] = useState(false)
   const [showModal, setShowModal] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!user || !supabase) return
@@ -44,17 +45,28 @@ export default function FavoriteButton({ toolSlug, fullWidth = false }: Props) {
     if (!supabase) return
 
     setLoading(true)
+    setError(null)
     if (favorited) {
-      await supabase.from('favorites').delete().eq('user_id', user.id).eq('tool_slug', toolSlug)
-      setFavorited(false)
+      const { error: err } = await supabase.from('favorites').delete().eq('user_id', user.id).eq('tool_slug', toolSlug)
+      if (err) {
+        console.error('[FavoriteButton] delete error:', err)
+        setError('Erreur — réessayez')
+      } else {
+        setFavorited(false)
+      }
     } else {
-      await supabase.from('favorites').insert({ user_id: user.id, tool_slug: toolSlug })
-      setFavorited(true)
-      setBursting(true)
-      setTimeout(() => setBursting(false), 700)
-      window.dispatchEvent(new CustomEvent('fairplay:toast', {
-        detail: { message: '✓ Ajouté à vos favoris' },
-      }))
+      const { error: err } = await supabase.from('favorites').insert({ user_id: user.id, tool_slug: toolSlug })
+      if (err) {
+        console.error('[FavoriteButton] insert error:', err)
+        setError('Erreur — réessayez')
+      } else {
+        setFavorited(true)
+        setBursting(true)
+        setTimeout(() => setBursting(false), 700)
+        window.dispatchEvent(new CustomEvent('fairplay:toast', {
+          detail: { message: '✓ Ajouté à vos favoris' },
+        }))
+      }
     }
     setLoading(false)
   }
@@ -105,6 +117,9 @@ export default function FavoriteButton({ toolSlug, fullWidth = false }: Props) {
         {favorited ? <BookmarkCheck size={13} /> : <Bookmark size={13} />}
         <span>{favorited ? 'Sauvegardé' : 'Sauvegarder'}</span>
       </button>
+      {error && (
+        <p className="text-xs mt-1 text-center" style={{ color: '#f87171' }}>{error}</p>
+      )}
 
       {/* Modal for non-connected users */}
       {showModal && (

@@ -6,6 +6,7 @@ import type { CatalogTool } from '@/lib/catalog-types'
 import { findBestMatches } from '@/lib/matching'
 import type { MatchResult } from '@/lib/matching'
 import ToolLogo from './ToolLogo'
+import { DynamicStarRating } from './DynamicRating'
 
 const PRICING_LABEL: Record<CatalogTool['pricing'], { label: string; bg: string; color: string }> = {
   free:     { label: 'Gratuit',  bg: 'rgba(16,185,129,0.12)',  color: '#34d399' },
@@ -140,8 +141,8 @@ function RankingCard({ result, rank }: { result: MatchResult; rank: number }) {
               </span>
 
               <div className="flex items-center gap-1.5">
-                <StarRating rating={tool.rating} />
-                <span className="text-xs" style={{ color: '#5a5a78' }}>facilité</span>
+                <DynamicStarRating toolSlug={tool.slug} fallback={tool.rating} />
+                <span className="text-xs" style={{ color: '#5a5a78' }}>note FairPlay</span>
               </div>
             </div>
 

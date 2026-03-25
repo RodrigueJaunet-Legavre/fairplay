@@ -11,6 +11,7 @@ import type { CatalogTool } from '@/lib/catalog-types'
 import type { User } from '@supabase/supabase-js'
 import { getCatalogToolBySlug } from '@/lib/tools-index'
 import { getToolBySlug } from '@/lib/tools'
+import { useToolRating } from '@/app/ui/DynamicRating'
 
 type Profile = {
   metier: string
@@ -193,6 +194,7 @@ export default function DashboardPage() {
 
 function ToolCard({ tool }: { tool: CatalogTool }) {
   const p = PRICING_STYLE[tool.pricing]
+  const { avg, count, hasFairplayReviews } = useToolRating(tool.slug, tool.rating)
   return (
     <Link
       href={`/tools/${tool.slug}`}
@@ -221,7 +223,12 @@ function ToolCard({ tool }: { tool: CatalogTool }) {
         </div>
       </div>
       <div className="flex items-center justify-between mt-auto pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <span className="text-xs" style={{ color: '#3a3a50' }}>★ {tool.rating} / 5</span>
+        <span className="text-xs" style={{ color: '#fbbf24' }}>
+          ★ {avg.toFixed(1)}/5
+          <span style={{ color: hasFairplayReviews ? '#5a5a78' : '#3a3a50' }}>
+            {' · '}{hasFairplayReviews ? `${count} avis` : 'Note indicative'}
+          </span>
+        </span>
         <span className="text-xs font-medium" style={{ color: '#a78bfa' }}>Voir l'outil →</span>
       </div>
     </Link>
@@ -342,6 +349,7 @@ function FavoriteCard({
 }) {
   const [removing, setRemoving] = useState(false)
   const p = PRICING_STYLE[tool.pricing]
+  const { avg, count, hasFairplayReviews } = useToolRating(tool.slug, tool.rating)
 
   async function remove() {
     if (!supabase || removing) return
@@ -375,7 +383,12 @@ function FavoriteCard({
         </div>
 
         {/* Tool rating */}
-        <p className="text-xs mb-3" style={{ color: '#3a3a50' }}>★ {tool.rating} / 5</p>
+        <p className="text-xs mb-3" style={{ color: '#fbbf24' }}>
+          ★ {avg.toFixed(1)}/5
+          <span style={{ color: hasFairplayReviews ? '#5a5a78' : '#3a3a50' }}>
+            {' · '}{hasFairplayReviews ? `${count} avis` : 'Note indicative'}
+          </span>
+        </p>
 
         {/* User review */}
         {review && (
