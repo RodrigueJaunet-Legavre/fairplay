@@ -23,7 +23,7 @@ export default function SignupPage() {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { emailRedirectTo: `${window.location.origin}/onboarding` },
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback?next=/onboarding` },
     })
     setLoading(false)
     if (error) {
@@ -84,7 +84,7 @@ export default function SignupPage() {
             style={{ background: 'rgba(124,58,237,0.06)', border: '1px solid rgba(124,58,237,0.15)' }}
           >
             {[
-              '✓ 3 recherches intelligentes par jour',
+              '✓ Recherches intelligentes illimitées',
               '✓ Accès à toutes les fiches outils',
               '✓ Sauvegardez vos outils favoris',
             ].map((b) => (

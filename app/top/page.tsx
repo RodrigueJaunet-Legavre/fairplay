@@ -49,39 +49,8 @@ function FrenchBadge({ supported }: { supported: boolean }) {
   )
 }
 
-function PremiumLockOverlay() {
-  return (
-    <div
-      className="absolute inset-x-0 bottom-0 flex flex-col items-center justify-end pb-8"
-      style={{
-        background: 'linear-gradient(to bottom, transparent 0%, #070712 55%)',
-        height: '280px',
-        pointerEvents: 'auto',
-      }}
-    >
-      <div
-        className="rounded-2xl p-6 text-center max-w-sm mx-auto"
-        style={{ background: '#0f0f1a', border: '1px solid rgba(251,191,36,0.2)' }}
-      >
-        <p className="text-xl mb-2">🔒</p>
-        <h3 className="font-bold mb-1" style={{ color: '#f0f0f8' }}>Top 10 complet réservé aux abonnés</h3>
-        <p className="text-sm mb-4" style={{ color: '#5a5a78' }}>
-          Débloquez le tableau complet avec les 10 outils, les comparaisons détaillées et le support FR.
-        </p>
-        <Link
-          href="/premium"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold"
-          style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', color: '#1a0a00' }}
-        >
-          ⭐ Essai gratuit 7 jours →
-        </Link>
-      </div>
-    </div>
-  )
-}
-
-function ComparisonTable({ tools, isPremium }: { tools: EnrichedTool[]; isPremium: boolean }) {
-  const visibleTools = isPremium ? tools : tools.slice(0, 3)
+function ComparisonTable({ tools }: { tools: EnrichedTool[] }) {
+  const visibleTools = tools
 
   return (
     <div className="relative">
@@ -177,14 +146,11 @@ function ComparisonTable({ tools, isPremium }: { tools: EnrichedTool[]; isPremiu
         </table>
       </div>
 
-      {/* Lock overlay for non-premium */}
-      {!isPremium && tools.length > 3 && <PremiumLockOverlay />}
     </div>
   )
 }
 
 export default function TopPage() {
-  const { isPremium } = useAuth()
   const [activeCategory, setActiveCategory] = useState<string>(TOP_CATEGORIES[0].slug)
 
   const tools = getTop10ForCategory(activeCategory)
@@ -204,15 +170,6 @@ export default function TopPage() {
               Les meilleurs outils IA comparés sur les critères qui comptent vraiment
             </p>
           </div>
-          {!isPremium && (
-            <Link
-              href="/premium"
-              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold"
-              style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.2)', color: '#fbbf24' }}
-            >
-              ⭐ Débloquer le Top 10 complet
-            </Link>
-          )}
         </div>
       </div>
 
@@ -250,14 +207,9 @@ export default function TopPage() {
           <h2 className="font-bold" style={{ color: '#f0f0f8' }}>
             Top 10 — {catLabel}
           </h2>
-          {!isPremium && (
-            <span className="text-xs" style={{ color: '#5a5a78' }}>
-              3 / 10 outils visibles
-            </span>
-          )}
         </div>
 
-        <ComparisonTable tools={tools} isPremium={isPremium} />
+        <ComparisonTable tools={tools} />
       </div>
 
       {/* Legend */}

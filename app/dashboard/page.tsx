@@ -34,7 +34,7 @@ function getFirstName(user: User): string {
 
 export default function DashboardPage() {
   const router = useRouter()
-  const { user, loading, isPremium } = useAuth()
+  const { user, loading } = useAuth()
   const [profile, setProfile] = useState<Profile | null>(null)
   const [checking, setChecking] = useState(true)
 
@@ -71,8 +71,7 @@ export default function DashboardPage() {
 
   if (!user || !profile) return null
 
-  const allTools = getToolsForProfession(profile.metier)
-  const tools = isPremium ? allTools : allTools.slice(0, 2)
+  const tools = getToolsForProfession(profile.metier)
   const profEmoji = PROFESSIONS.find((p) => p.id === profile.metier)?.emoji ?? '✨'
   const firstName = getFirstName(user)
 
@@ -127,31 +126,6 @@ export default function DashboardPage() {
             ))}
           </div>
 
-          {/* Premium gate */}
-          {!isPremium && (
-            <div
-              className="mt-4 rounded-2xl p-8 text-center relative overflow-hidden"
-              style={{
-                background: 'linear-gradient(135deg, rgba(251,191,36,0.06), rgba(124,58,237,0.06))',
-                border: '1px solid rgba(251,191,36,0.18)',
-              }}
-            >
-              <p className="text-3xl mb-3">⭐</p>
-              <h3 className="text-lg font-black mb-2" style={{ color: '#f0f0f8' }}>
-                Débloquez les 4 autres recommandations
-              </h3>
-              <p className="text-sm mb-5" style={{ color: '#6b7280' }}>
-                Les membres Premium accèdent aux 6 outils personnalisés, aux comparaisons complètes et aux recherches illimitées.
-              </p>
-              <Link
-                href="/premium"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm"
-                style={{ background: 'linear-gradient(135deg, #fbbf24, #f59e0b)', color: '#1a0a00' }}
-              >
-                Essai gratuit 7 jours →
-              </Link>
-            </div>
-          )}
         </div>
       </section>
 

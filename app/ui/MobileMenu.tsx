@@ -14,10 +14,10 @@ const BASE_LINKS = [
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false)
-  const { isPremium } = useAuth()
+  const { user } = useAuth()
   const pathname = usePathname()
 
-  const links = isPremium
+  const links = user
     ? [BASE_LINKS[0], { href: '/dashboard', label: 'Mon espace' }, ...BASE_LINKS.slice(1)]
     : BASE_LINKS
 

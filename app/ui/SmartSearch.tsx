@@ -7,26 +7,7 @@ import type { CatalogTool } from '@/lib/catalog-types'
 import type { MatchResult } from '@/lib/matching'
 import { getSuggestions } from '@/lib/synonyms'
 import { useAuth } from './AuthProvider'
-import FreemiumModal from './FreemiumModal'
 import ToolLogo from './ToolLogo'
-
-const ANON_LIMIT = 1
-const FREE_DAILY_LIMIT = 3
-
-function getTodayKey() {
-  return `fp_searches_${new Date().toISOString().split('T')[0]}`
-}
-
-function getSearchCount(isLoggedIn: boolean): number {
-  if (typeof window === 'undefined') return 0
-  const key = isLoggedIn ? getTodayKey() : 'fp_anon_searches'
-  return parseInt(localStorage.getItem(key) ?? '0', 10)
-}
-
-function incrementSearchCount(isLoggedIn: boolean) {
-  const key = isLoggedIn ? getTodayKey() : 'fp_anon_searches'
-  localStorage.setItem(key, String(getSearchCount(isLoggedIn) + 1))
-}
 
 const PRICING_COLOR = {
   free:     { bg: 'rgba(16,185,129,0.12)', color: '#34d399', label: 'Gratuit' },
@@ -54,7 +35,7 @@ type Props = {
 
 export default function SmartSearch({ tools, toolCount, examples, discoverLink }: Props) {
   const router = useRouter()
-  const { user, isPremium } = useAuth()
+  const { user } = useAuth()
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -69,8 +50,6 @@ export default function SmartSearch({ tools, toolCount, examples, discoverLink }
   const [activeIdx, setActiveIdx] = useState(-1)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const suggDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [modal, setModal] = useState<'signup' | 'premium' | null>(null)
-
   // Rotate placeholder text
   useEffect(() => {
     const id = setInterval(() => {
@@ -90,15 +69,6 @@ export default function SmartSearch({ tools, toolCount, examples, discoverLink }
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  function checkLimit(): 'signup' | 'premium' | null {
-    if (isPremium) return null
-    const isLoggedIn = !!user
-    const count = getSearchCount(isLoggedIn)
-    if (!isLoggedIn && count >= ANON_LIMIT) return 'signup'
-    if (isLoggedIn && count >= FREE_DAILY_LIMIT) return 'premium'
-    return null
-  }
-
   const compute = useCallback(
     async (q: string) => {
       if (q.trim().length < 3) {
@@ -106,11 +76,8 @@ export default function SmartSearch({ tools, toolCount, examples, discoverLink }
         setIsOpen(false)
         return
       }
-      const limitType = checkLimit()
-      if (limitType) { setModal(limitType); return }
 
       setIsLoading(true)
-      incrementSearchCount(!!user)
       const { findBestMatches } = await import('@/lib/matching')
       const matches = findBestMatches(q, tools, 3)
       setResults(matches)
@@ -155,8 +122,6 @@ export default function SmartSearch({ tools, toolCount, examples, discoverLink }
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    const limitType = checkLimit()
-    if (limitType) { setModal(limitType); return }
     if (activeIdx >= 0 && results[activeIdx]) {
       router.push(`/tools/${results[activeIdx].tool.slug}`)
       setIsOpen(false)
@@ -183,8 +148,6 @@ export default function SmartSearch({ tools, toolCount, examples, discoverLink }
   }
 
   return (
-    <>
-    {modal && <FreemiumModal type={modal} onClose={() => setModal(null)} />}
     <div ref={containerRef} className="relative" style={{ zIndex: 40 }}>
 
       {/* Hero text — smooth collapse when user starts typing */}
@@ -438,7 +401,6 @@ export default function SmartSearch({ tools, toolCount, examples, discoverLink }
       )}
       </div>{/* max-w-2xl wrapper */}
     </div>
-    </>
   )
 }
 

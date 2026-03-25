@@ -12,7 +12,7 @@ function getFirstName(email: string): string {
 }
 
 export default function HeaderAuth() {
-  const { user, loading, isPremium, signOut } = useAuth()
+  const { user, loading, signOut } = useAuth()
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -71,9 +71,9 @@ export default function HeaderAuth() {
   }
 
   const MENU_ITEMS = [
-    { label: 'Mon profil',        href: isPremium ? '/dashboard' : '/login', icon: '👤' },
-    { label: 'Mes préférences',   href: '/onboarding',                        icon: '⚙️' },
-    { label: 'Mon abonnement',    href: '/premium',                           icon: '⭐' },
+    { label: 'Mon espace',        href: '/dashboard',   icon: '👤' },
+    { label: 'Mes préférences',   href: '/onboarding',  icon: '⚙️' },
+    { label: 'Premium',           href: '/premium',     icon: '⭐' },
   ]
 
   return (
@@ -100,14 +100,12 @@ export default function HeaderAuth() {
           {firstName}
         </span>
 
-        {isPremium && (
-          <span
-            className="hidden sm:inline text-xs px-1.5 py-0.5 rounded-full font-bold"
-            style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
-          >
-            ⭐
-          </span>
-        )}
+        <span
+          className="hidden sm:inline text-xs px-1.5 py-0.5 rounded-full font-bold"
+          style={{ background: 'rgba(124,58,237,0.15)', color: '#a78bfa', border: '1px solid rgba(124,58,237,0.3)' }}
+        >
+          Membre
+        </span>
 
         <svg
           className="w-3.5 h-3.5 transition-transform shrink-0"
@@ -135,14 +133,12 @@ export default function HeaderAuth() {
           >
             <p className="text-sm font-semibold" style={{ color: '#f0f0f8' }}>{firstName}</p>
             <p className="text-xs truncate" style={{ color: '#3a3a50' }}>{user.email}</p>
-            {isPremium && (
-              <span
-                className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-semibold mt-1"
-                style={{ background: 'rgba(251,191,36,0.12)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.2)' }}
-              >
-                ⭐ Premium
-              </span>
-            )}
+            <span
+              className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-semibold mt-1"
+              style={{ background: 'rgba(124,58,237,0.12)', color: '#a78bfa', border: '1px solid rgba(124,58,237,0.2)' }}
+            >
+              Membre
+            </span>
           </div>
 
           {/* Menu items */}
