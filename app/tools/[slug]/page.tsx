@@ -8,6 +8,7 @@ import ToolLogo from '@/app/ui/ToolLogo'
 import ReviewSection from '@/app/ui/ReviewSection'
 import FavoriteButton from '@/app/ui/FavoriteButton'
 import { DynamicRatingChip } from '@/app/ui/DynamicRating'
+import GuideSection from '@/app/ui/GuideSection'
 
 export function generateStaticParams() {
   const detailedSlugs = tools.map((t) => ({ slug: t.slug }))
@@ -133,6 +134,9 @@ export default async function ToolDetailPage(props: { params: Promise<{ slug: st
       ) : (
         <CatalogOverview tool={catalogTool} related={relatedTools} />
       )}
+
+      {/* Guide complet */}
+      <GuideSection slug={catalogTool.slug} toolColor={catalogTool.color} />
 
       {/* Reviews */}
       <div className="mt-6">
