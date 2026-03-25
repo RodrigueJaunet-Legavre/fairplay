@@ -41,7 +41,7 @@ export default function HeaderAuth() {
 
   if (!user) {
     return (
-      <div className="flex items-center gap-2 shrink-0">
+      <div className="hidden md:flex items-center gap-2 shrink-0">
         <Link
           href="/login"
           className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
@@ -77,7 +77,7 @@ export default function HeaderAuth() {
   ]
 
   return (
-    <div ref={ref} className="relative shrink-0">
+    <div ref={ref} className="relative hidden md:block shrink-0">
       {/* Trigger button */}
       <button
         onClick={() => setOpen((o) => !o)}

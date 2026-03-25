@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { useAuth } from './AuthProvider'
 
@@ -12,14 +12,31 @@ const BASE_LINKS = [
   { href: '/decouvrir', label: 'Découverte' },
 ]
 
+function getFirstName(email: string): string {
+  const prefix = email.split('@')[0]
+  const name = prefix.split(/[._-]/)[0]
+  return name.charAt(0).toUpperCase() + name.slice(1)
+}
+
 export default function MobileMenu() {
   const [open, setOpen] = useState(false)
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
   const pathname = usePathname()
+  const router = useRouter()
 
   const links = user
     ? [BASE_LINKS[0], { href: '/dashboard', label: 'Mon espace' }, ...BASE_LINKS.slice(1)]
     : BASE_LINKS
+
+  const initials = user ? (user.email ?? 'U').slice(0, 2).toUpperCase() : ''
+  const firstName = user ? getFirstName(user.email ?? '') : ''
+
+  async function handleSignOut() {
+    setOpen(false)
+    await signOut()
+    router.push('/')
+    router.refresh()
+  }
 
   // Close on Escape
   useEffect(() => {
@@ -110,17 +127,52 @@ export default function MobileMenu() {
           })}
         </nav>
 
-        {/* Footer */}
-        <div className="p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-          <Link
-            href="/signup"
-            className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white transition-all"
-            style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
-            onClick={() => setOpen(false)}
-          >
-            S&apos;inscrire gratuitement →
-          </Link>
-        </div>
+        {/* Footer — auth */}
+        {user ? (
+          <div className="p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            {/* User info */}
+            <div className="flex items-center gap-3 px-2 py-3 mb-2 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
+              <div
+                className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
+                style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
+              >
+                {initials}
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-semibold" style={{ color: '#f0f0f8' }}>{firstName}</p>
+                <p className="text-xs truncate" style={{ color: '#3a3a50' }}>{user.email}</p>
+              </div>
+            </div>
+            {/* Sign out */}
+            <button
+              onClick={handleSignOut}
+              className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-colors"
+              style={{ color: '#f87171', background: 'rgba(239,68,68,0.06)' }}
+            >
+              <span>🚪</span>
+              Déconnexion
+            </button>
+          </div>
+        ) : (
+          <div className="p-4 flex flex-col gap-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+            <Link
+              href="/signup"
+              className="flex items-center justify-center gap-2 w-full py-3 rounded-xl text-sm font-bold text-white transition-all"
+              style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
+              onClick={() => setOpen(false)}
+            >
+              S&apos;inscrire gratuitement →
+            </Link>
+            <Link
+              href="/login"
+              className="flex items-center justify-center w-full py-3 rounded-xl text-sm font-semibold transition-colors"
+              style={{ color: '#a8a8c0', border: '1px solid rgba(255,255,255,0.1)' }}
+              onClick={() => setOpen(false)}
+            >
+              Connexion
+            </Link>
+          </div>
+        )}
       </div>
     </>
   )
