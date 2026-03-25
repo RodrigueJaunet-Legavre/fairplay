@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
@@ -20,9 +21,13 @@ function getFirstName(email: string): string {
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { user, signOut } = useAuth()
   const pathname = usePathname()
   const router = useRouter()
+
+  // Portal needs document to be available
+  useEffect(() => { setMounted(true) }, [])
 
   const links = user
     ? [BASE_LINKS[0], { href: '/dashboard', label: 'Mon espace' }, ...BASE_LINKS.slice(1)]
@@ -56,19 +61,9 @@ export default function MobileMenu() {
     return () => { document.body.style.overflow = '' }
   }, [open])
 
-  return (
+  const drawer = (
     <>
-      {/* Hamburger button — mobile only */}
-      <button
-        className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
-        style={{ color: '#a8a8c0', background: open ? 'rgba(255,255,255,0.06)' : 'transparent' }}
-        onClick={() => setOpen((v) => !v)}
-        aria-label="Menu"
-      >
-        {open ? <X size={20} /> : <Menu size={20} />}
-      </button>
-
-      {/* Overlay */}
+      {/* Overlay — rendered via portal to escape backdrop-filter stacking context */}
       {open && (
         <div
           className="fixed inset-0 md:hidden"
@@ -130,7 +125,6 @@ export default function MobileMenu() {
         {/* Footer — auth */}
         {user ? (
           <div className="p-4" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-            {/* User info */}
             <div className="flex items-center gap-3 px-2 py-3 mb-2 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)' }}>
               <div
                 className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-white shrink-0"
@@ -143,7 +137,6 @@ export default function MobileMenu() {
                 <p className="text-xs truncate" style={{ color: '#3a3a50' }}>{user.email}</p>
               </div>
             </div>
-            {/* Sign out */}
             <button
               onClick={handleSignOut}
               className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-colors"
@@ -174,6 +167,23 @@ export default function MobileMenu() {
           </div>
         )}
       </div>
+    </>
+  )
+
+  return (
+    <>
+      {/* Hamburger button — stays inside the header */}
+      <button
+        className="md:hidden flex items-center justify-center w-9 h-9 rounded-lg transition-colors"
+        style={{ color: '#a8a8c0', background: open ? 'rgba(255,255,255,0.06)' : 'transparent' }}
+        onClick={() => setOpen((v) => !v)}
+        aria-label="Menu"
+      >
+        {open ? <X size={20} /> : <Menu size={20} />}
+      </button>
+
+      {/* Overlay + drawer rendered via portal directly on body */}
+      {mounted && createPortal(drawer, document.body)}
     </>
   )
 }
