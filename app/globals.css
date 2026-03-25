@@ -130,3 +130,39 @@ body {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* Search input — no focus ring */
+input[type="text"]:focus-visible,
+input[type="search"]:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ── Favorite button ── */
+@keyframes fav-particle {
+  0%   { transform: translate(-50%, -50%) rotate(var(--fav-angle)) translateY(0)     scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) rotate(var(--fav-angle)) translateY(-30px) scale(0); opacity: 0; }
+}
+@keyframes fav-save {
+  0%   { transform: scale(1); }
+  35%  { transform: scale(1.06); }
+  100% { transform: scale(1); }
+}
+@keyframes toast-up {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.fav-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--fav-color, #a78bfa);
+  pointer-events: none;
+  animation: fav-particle 0.65s ease-out forwards;
+}
+.fav-btn-saving { animation: fav-save 0.4s ease; }
+.animate-toast-up { animation: toast-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }

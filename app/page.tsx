@@ -1,11 +1,10 @@
 import Link from 'next/link'
-import { getFeaturedTools, tools } from '@/lib/tools'
+import { tools } from '@/lib/tools'
 import { allCatalogTools } from '@/lib/tools-index'
 import type { CatalogTool } from '@/lib/catalog-types'
-import ToolCard from '@/app/ui/ToolCard'
 import SmartSearch from '@/app/ui/SmartSearch'
-import HomeCategoryGrid from '@/app/ui/HomeCategoryGrid'
 import ToolLogo from '@/app/ui/ToolLogo'
+import FadeIn from '@/app/ui/FadeIn'
 
 const detailedSlugs = new Set(tools.map((t) => t.slug))
 const allTools: CatalogTool[] = [
@@ -13,262 +12,179 @@ const allTools: CatalogTool[] = [
   ...allCatalogTools.filter((t) => !detailedSlugs.has(t.slug)),
 ]
 
-
 export default function HomePage() {
-  const featured = getFeaturedTools()
   const topTools = [...allTools].sort((a, b) => b.upvotes - a.upvotes).slice(0, 8)
 
   return (
-    <div>
-      {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        {/* Background glows */}
+    <div style={{ background: '#0a0a0f' }}>
+
+      {/* ── Hero ──────────────────────────────────────────────── */}
+      <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-4 sm:px-6 overflow-hidden">
+        {/* Background glow */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'radial-gradient(ellipse 70% 60% at 50% -5%, rgba(124,58,237,0.18) 0%, transparent 65%)',
+            background: 'radial-gradient(ellipse 80% 60% at 50% -5%, rgba(124,58,237,0.22) 0%, transparent 65%)',
           }}
         />
+        {/* Grid pattern */}
         <div
-          className="absolute pointer-events-none"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            inset: 0,
-            backgroundImage: 'linear-gradient(rgba(255,255,255,0.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.4) 1px, transparent 1px)',
-            backgroundSize: '56px 56px',
-            opacity: 0.025,
+            backgroundImage:
+              'linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)',
+            backgroundSize: '60px 60px',
+            opacity: 0.02,
           }}
         />
 
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-20 text-center">
-          {/* Badge */}
-          <div
-            className="animate-fade-up inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-8"
-            style={{
-              background: 'rgba(124,58,237,0.1)',
-              border: '1px solid rgba(124,58,237,0.25)',
-              color: '#a78bfa',
-            }}
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-violet-400 animate-pulse" />
-            {allTools.length}+ outils IA — mis à jour chaque semaine
-          </div>
-
-          {/* Title */}
-          <h1
-            className="animate-fade-up delay-100 text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight mb-6 leading-[1.08]"
-            style={{ color: '#f0f0f8' }}
-          >
-            Trouvez l'IA parfaite{' '}
-            <br className="hidden sm:block" />
-            <span className="gradient-text">pour chaque tâche</span>
-          </h1>
-
-          <p
-            className="animate-fade-up delay-200 text-xl sm:text-2xl mb-3 max-w-xl mx-auto leading-relaxed"
-            style={{ color: '#5a5a78' }}
-          >
-            Décrivez votre besoin — on trouve l'outil IA qu'il vous faut.
-          </p>
-
-          <p
-            className="animate-fade-up delay-200 text-sm mb-10"
-            style={{ color: '#3a3a50' }}
-          >
-            Pas besoin d'être expert · Gratuit · En français
-          </p>
-
-          {/* Smart search */}
-          <div className="animate-fade-up delay-300">
-            <SmartSearch tools={allTools} />
-          </div>
-
-          {/* Nouveau ici */}
-          <div className="animate-fade-up delay-350 mt-4">
-            <Link
-              href="/decouvrir"
-              className="inline-flex items-center gap-1.5 text-sm px-4 py-2 rounded-full transition-all"
-              style={{
-                background: 'rgba(124,58,237,0.08)',
-                border: '1px solid rgba(124,58,237,0.2)',
-                color: '#a78bfa',
-              }}
-            >
-              ✨ Nouveau ici ? Commencez par Découvrir →
-            </Link>
-          </div>
-
-          {/* Example queries */}
-          <div className="animate-fade-up delay-400 flex flex-wrap items-center justify-center gap-2 mt-5">
-            <span className="text-xs" style={{ color: '#3a3a50' }}>Essayez :</span>
-            {[
-              'créer une vidéo de présentation',
-              'écrire des emails marketing',
-              'générer des images réalistes',
-              'déboguer mon code',
-            ].map((q) => (
-              <Link
-                key={q}
-                href={`/tools?q=${encodeURIComponent(q)}`}
-                className="px-3 py-1 rounded-full text-xs transition-all"
-                style={{
-                  background: 'rgba(255,255,255,0.04)',
-                  border: '1px solid rgba(255,255,255,0.07)',
-                  color: '#6b7280',
-                }}
-              >
-                {q}
-              </Link>
-            ))}
-          </div>
+        <div className="relative w-full max-w-3xl">
+          <SmartSearch
+            tools={allTools}
+            toolCount={allTools.length}
+            discoverLink
+            examples={['Créer une vidéo', 'Écrire un article', 'Coder une app', 'Gérer ma compta']}
+          />
         </div>
       </section>
 
-      {/* ── Stats bar ────────────────────────────────────────── */}
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      {/* ── Stats ─────────────────────────────────────────────── */}
+      <section
+        style={{
+          background: '#0d0d18',
+          borderTop: '1px solid rgba(255,255,255,0.06)',
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+        }}
+      >
+        <FadeIn className="max-w-4xl mx-auto px-6 py-14">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
             {[
-              { value: `${allTools.length}+`, label: 'Outils IA' },
+              { value: '206+', label: 'Outils' },
               { value: '13', label: 'Catégories' },
-              { value: '500M+', label: 'Utilisateurs actifs' },
-              { value: '4.5★', label: 'Note moyenne' },
+              { value: '50+', label: 'Métiers' },
+              { value: 'Gratuit', label: 'Pour commencer' },
             ].map(({ value, label }) => (
               <div key={label}>
-                <p className="text-2xl font-black mb-0.5" style={{ color: '#f0f0f8' }}>{value}</p>
-                <p className="text-xs" style={{ color: '#5a5a78' }}>{label}</p>
+                <p
+                  className="font-black mb-1"
+                  style={{ fontSize: '2.25rem', lineHeight: 1, color: '#f0f0f8' }}
+                >
+                  {value}
+                </p>
+                <p className="text-sm font-light" style={{ color: '#5a5a78' }}>{label}</p>
               </div>
             ))}
           </div>
-        </div>
-      </div>
-
-      {/* ── Categories ───────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <h2 className="text-xl font-bold mb-6" style={{ color: '#f0f0f8' }}>Explorer par catégorie</h2>
-        <HomeCategoryGrid />
+        </FadeIn>
       </section>
 
-      {/* ── Featured ─────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <div className="flex items-end justify-between mb-8">
-          <div>
-            <h2 className="text-2xl font-bold" style={{ color: '#f0f0f8' }}>Outils à la une</h2>
-            <p className="text-sm mt-1" style={{ color: '#5a5a78' }}>Sélectionnés par notre équipe</p>
-          </div>
-          <Link href="/tools" className="text-sm font-medium" style={{ color: '#a78bfa' }}>
-            Voir tout →
-          </Link>
-        </div>
+      {/* ── Les plus populaires ───────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <FadeIn className="mb-12">
+          <h2 className="text-3xl font-black mb-2" style={{ color: '#f0f0f8' }}>
+            Les plus populaires
+          </h2>
+          <p className="font-light" style={{ color: '#5a5a78' }}>
+            Les IAs plébiscitées par notre communauté
+          </p>
+        </FadeIn>
+
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {featured.map((tool) => (
-            <ToolCard key={tool.slug} tool={tool} featured />
-          ))}
-        </div>
-      </section>
-
-      {/* ── Top voted leaderboard ────────────────────────────── */}
-      <section
-        className="py-16"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <h2 className="text-2xl font-bold" style={{ color: '#f0f0f8' }}>Les plus populaires</h2>
-              <p className="text-sm mt-1" style={{ color: '#5a5a78' }}>Classés par votes de la communauté</p>
-            </div>
-            <Link href="/tools" className="text-sm font-medium" style={{ color: '#a78bfa' }}>
-              Voir tout →
-            </Link>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
-            {topTools.map((tool, i) => (
+          {topTools.map((tool, i) => (
+            <FadeIn key={tool.slug} delay={i * 60}>
               <Link
-                key={tool.slug}
                 href={`/tools/${tool.slug}`}
-                className="flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all group"
+                className="flex flex-col p-5 rounded-2xl h-full transition-all hover:scale-[1.02] group"
                 style={{
-                  background: 'rgba(255,255,255,0.02)',
-                  border: '1px solid rgba(255,255,255,0.05)',
+                  background: '#0f0f1a',
+                  border: '1px solid rgba(255,255,255,0.07)',
                 }}
               >
-                {/* Rank */}
-                <span
-                  className="text-xl font-black w-8 text-center shrink-0 tabular-nums"
-                  style={{ color: i < 3 ? '#a78bfa' : '#2a2a3a' }}
+                <div
+                  className="h-0.5 w-full rounded-full mb-5"
+                  style={{ background: `linear-gradient(90deg, ${tool.color}, transparent)` }}
+                />
+                <ToolLogo tool={tool} size={44} className="mb-3" />
+                <p
+                  className="font-bold text-sm mb-1 group-hover:text-violet-400 transition-colors"
+                  style={{ color: '#f0f0f8' }}
                 >
-                  {i + 1}
-                </span>
-
-                {/* Logo */}
-                <ToolLogo tool={tool} size={44} />
-
-                {/* Info */}
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-0.5">
-                    <p className="font-semibold text-sm truncate" style={{ color: '#f0f0f8' }}>
-                      {tool.name}
-                    </p>
-                    <span
-                      className="shrink-0 px-1.5 py-0.5 rounded-full text-xs"
-                      style={{
-                        background: tool.pricing === 'free' ? 'rgba(16,185,129,0.12)' : tool.pricing === 'freemium' ? 'rgba(124,58,237,0.12)' : 'rgba(239,68,68,0.12)',
-                        color: tool.pricing === 'free' ? '#34d399' : tool.pricing === 'freemium' ? '#a78bfa' : '#f87171',
-                      }}
-                    >
-                      {tool.pricing === 'free' ? 'Gratuit' : tool.pricing === 'freemium' ? 'Freemium' : 'Payant'}
-                    </span>
-                  </div>
-                  <p className="text-xs truncate" style={{ color: '#5a5a78' }}>{tool.tagline}</p>
-                </div>
-
-                {/* Score */}
-                <div className="shrink-0 text-right">
-                  <p className="text-sm font-bold tabular-nums" style={{ color: '#f0f0f8' }}>
-                    {tool.upvotes.toLocaleString('fr')}
-                  </p>
-                  <p className="text-xs" style={{ color: '#3a3a50' }}>votes</p>
+                  {tool.name}
+                </p>
+                <p
+                  className="text-xs font-light leading-relaxed flex-1"
+                  style={{ color: '#5a5a78' }}
+                >
+                  {tool.tagline}
+                </p>
+                <div className="mt-4 pt-3" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+                  <span className="text-xs font-semibold" style={{ color: '#a78bfa' }}>
+                    Voir →
+                  </span>
                 </div>
               </Link>
-            ))}
-          </div>
+            </FadeIn>
+          ))}
         </div>
+
+        <FadeIn className="mt-10 text-center" delay={200}>
+          <Link
+            href="/tools"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold transition-all"
+            style={{
+              background: 'rgba(124,58,237,0.1)',
+              border: '1px solid rgba(124,58,237,0.2)',
+              color: '#a78bfa',
+            }}
+          >
+            Explorer les 206+ outils →
+          </Link>
+        </FadeIn>
       </section>
 
-      {/* ── CTA ──────────────────────────────────────────────── */}
-      <section className="py-24">
-        <div className="max-w-2xl mx-auto px-4 text-center">
+      {/* ── CTA ───────────────────────────────────────────────── */}
+      <section className="px-4 sm:px-6 pb-28 pt-4">
+        <FadeIn>
           <div
-            className="rounded-2xl p-12 relative overflow-hidden"
+            className="max-w-2xl mx-auto text-center rounded-3xl p-12 relative overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, rgba(124,58,237,0.12), rgba(236,72,153,0.08))',
+              background: 'linear-gradient(135deg, rgba(124,58,237,0.1), rgba(236,72,153,0.08))',
               border: '1px solid rgba(124,58,237,0.18)',
             }}
           >
             <div
               className="absolute inset-0 pointer-events-none"
-              style={{ background: 'radial-gradient(ellipse 80% 80% at 50% -20%, rgba(124,58,237,0.12), transparent)' }}
+              style={{
+                background:
+                  'radial-gradient(ellipse 80% 80% at 50% -20%, rgba(124,58,237,0.15), transparent)',
+              }}
             />
             <div className="relative">
-              <p className="text-4xl mb-4">🚀</p>
-              <h2 className="text-3xl font-black mb-3" style={{ color: '#f0f0f8' }}>
-                Vous avez créé un outil IA ?
+              <p className="text-4xl mb-5">✨</p>
+              <h2
+                className="font-black mb-3 leading-tight"
+                style={{ fontSize: '1.875rem', color: '#f0f0f8' }}
+              >
+                Pas encore inscrit ?
               </h2>
-              <p className="text-lg mb-8" style={{ color: '#6b7280' }}>
-                Soumettez-le à notre communauté et obtenez vos premiers utilisateurs dès aujourd'hui.
+              <p className="font-light mb-8 text-lg" style={{ color: '#6b7280' }}>
+                Créez votre espace personnalisé gratuitement
               </p>
               <Link
-                href="/tools"
-                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-white"
-                style={{ background: 'linear-gradient(135deg, #7c3aed, #a855f7)' }}
+                href="/signup"
+                className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-white text-sm transition-all hover:scale-105"
+                style={{
+                  background: 'linear-gradient(135deg, #7c3aed, #ec4899)',
+                  boxShadow: '0 0 32px rgba(124,58,237,0.3)',
+                }}
               >
-                Soumettre un outil →
+                S&apos;inscrire gratuitement →
               </Link>
             </div>
           </div>
-        </div>
+        </FadeIn>
       </section>
+
     </div>
   )
 }

@@ -4,7 +4,9 @@ import Link from 'next/link'
 import { AuthProvider } from '@/app/ui/AuthProvider'
 import HeaderAuth from '@/app/ui/HeaderAuth'
 import NavLinks from '@/app/ui/NavLinks'
+import MobileMenu from '@/app/ui/MobileMenu'
 import LogoIcon from '@/app/ui/LogoIcon'
+import Toast from '@/app/ui/Toast'
 import './globals.css'
 
 const geist = Geist({ variable: '--font-geist-sans', subsets: ['latin'] })
@@ -34,11 +36,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <NavLinks />
 
-            <HeaderAuth />
+            <div className="flex items-center gap-2">
+              <HeaderAuth />
+              <MobileMenu />
+            </div>
           </div>
         </header>
 
         <main className="flex-1">{children}</main>
+        <Toast />
 
         <footer style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }} className="py-12 mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">

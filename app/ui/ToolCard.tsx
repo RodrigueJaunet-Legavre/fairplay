@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import type { CatalogTool } from '@/lib/catalog-types'
 import ToolLogo from './ToolLogo'
+import FavoriteButton from './FavoriteButton'
 
 const PRICING = {
   free:     { bg: 'rgba(16,185,129,0.12)', color: '#34d399', label: 'Gratuit' },
@@ -83,21 +84,20 @@ export default function ToolCard({ tool, featured }: { tool: CatalogTool; featur
 
         {/* Footer */}
         <div
-          className="flex items-center justify-between mt-4 pt-3"
+          className="mt-4 pt-3 space-y-2.5"
           style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}
         >
-          <div className="flex items-center gap-1.5">
-            <span style={{ color: tool.color }}>▲</span>
-            <span className="text-sm font-semibold" style={{ color: '#f0f0f8' }}>
-              {tool.upvotes.toLocaleString('fr')}
-            </span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-1.5">
+              <span style={{ color: tool.color }}>▲</span>
+              <span className="text-sm font-semibold" style={{ color: '#f0f0f8' }}>
+                {tool.upvotes.toLocaleString('fr')}
+              </span>
+              <span className="text-xs" style={{ color: '#3a3a50' }}>votes</span>
+            </div>
+            <span className="text-xs" style={{ color: '#3a3a50' }}>★ {tool.rating}</span>
           </div>
-          <span
-            className="text-xs font-medium transition-all group-hover:translate-x-1"
-            style={{ color: '#a78bfa' }}
-          >
-            Voir →
-          </span>
+          <FavoriteButton toolSlug={tool.slug} fullWidth />
         </div>
       </div>
     </Link>

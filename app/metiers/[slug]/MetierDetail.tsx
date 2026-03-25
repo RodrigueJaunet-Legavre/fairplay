@@ -10,6 +10,7 @@ import type { Metier } from '@/lib/metiers'
 import { getMetierTop5Tools } from '@/lib/metiers'
 import ToolLogo from '@/app/ui/ToolLogo'
 import ReviewSection from '@/app/ui/ReviewSection'
+import FavoriteButton from '@/app/ui/FavoriteButton'
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; style?: React.CSSProperties; className?: string }>> = {
   Stethoscope, Scale, TrendingUp, GraduationCap, Code2, Megaphone,
@@ -137,7 +138,9 @@ export default function MetierDetail({ metier }: { metier: Metier }) {
                   <p className="text-sm mb-1" style={{ color: '#5a5a78' }}>{tool.tagline}</p>
                   <p className="text-xs" style={{ color: '#a78bfa' }}>{TOOL_DESCS[i]}</p>
                 </div>
-                <span className="text-xs shrink-0 self-center" style={{ color: '#3a3a50' }}>Voir →</span>
+                <div className="shrink-0 self-center">
+                  <FavoriteButton toolSlug={tool.slug} />
+                </div>
               </Link>
             )
           })}

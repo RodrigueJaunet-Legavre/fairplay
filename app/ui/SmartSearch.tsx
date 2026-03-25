@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import type { CatalogTool } from '@/lib/catalog-types'
 import type { MatchResult } from '@/lib/matching'
 import { getSuggestions } from '@/lib/synonyms'
@@ -44,13 +45,21 @@ const PLACEHOLDERS = [
   'rédiger des posts LinkedIn…',
 ]
 
-export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
+type Props = {
+  tools: CatalogTool[]
+  toolCount?: number
+  examples?: string[]
+  discoverLink?: boolean
+}
+
+export default function SmartSearch({ tools, toolCount, examples, discoverLink }: Props) {
   const router = useRouter()
   const { user, isPremium } = useAuth()
   const inputRef = useRef<HTMLInputElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const [query, setQuery] = useState('')
+  const isSearching = query.length > 0
   const [results, setResults] = useState<MatchResult[]>([])
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
@@ -150,11 +159,14 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
     if (limitType) { setModal(limitType); return }
     if (activeIdx >= 0 && results[activeIdx]) {
       router.push(`/tools/${results[activeIdx].tool.slug}`)
+      setIsOpen(false)
+      setShowSuggestions(false)
       return
     }
     if (query.trim()) {
       router.push(`/tools?q=${encodeURIComponent(query.trim())}`)
       setIsOpen(false)
+      setShowSuggestions(false)
     }
   }
 
@@ -173,14 +185,66 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
   return (
     <>
     {modal && <FreemiumModal type={modal} onClose={() => setModal(null)} />}
-    <div ref={containerRef} className="relative w-full max-w-2xl mx-auto">
+    <div ref={containerRef} className="relative" style={{ zIndex: 40 }}>
+
+      {/* Hero text — smooth collapse when user starts typing */}
+      {toolCount !== undefined && (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateRows: isSearching ? '0fr' : '1fr',
+            opacity: isSearching ? 0 : 1,
+            transform: isSearching ? 'translateY(-10px)' : 'translateY(0)',
+            transition: 'grid-template-rows 0.4s ease, opacity 0.3s ease, transform 0.3s ease',
+            pointerEvents: isSearching ? 'none' : 'auto',
+          }}
+        >
+          <div style={{ overflow: 'hidden' }}>
+            <div
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-8"
+              style={{
+                background: 'rgba(124,58,237,0.1)',
+                border: '1px solid rgba(124,58,237,0.25)',
+                color: '#a78bfa',
+              }}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+              {toolCount}+ outils référencés
+            </div>
+
+            <h1
+              className="text-3xl sm:text-5xl lg:text-7xl font-black tracking-tight mb-4 sm:mb-6 leading-[1.08]"
+              style={{ color: '#f0f0f8' }}
+            >
+              Comparez, choisissez,
+              <br />
+              <span className="gradient-text">utilisez les meilleures IAs</span>
+            </h1>
+
+            <p
+              className="text-sm sm:text-lg lg:text-xl mb-8 sm:mb-12 max-w-xl mx-auto font-light leading-relaxed"
+              style={{ color: '#5a5a78' }}
+            >
+              Décrivez ce que vous voulez faire — FairPlay trouve et compare les meilleurs outils IA pour vous.
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div
+        className="max-w-2xl mx-auto"
+        style={{
+          transform: isSearching ? 'translateY(-20px)' : 'translateY(0)',
+          transition: 'transform 0.4s cubic-bezier(0.22,1,0.36,1)',
+        }}
+      >
       <form onSubmit={handleSubmit}>
         <div
           className="flex items-center rounded-2xl overflow-visible transition-all"
           style={{
             background: 'rgba(255,255,255,0.05)',
             border: '1px solid rgba(255,255,255,0.12)',
-            boxShadow: isOpen ? '0 0 0 3px rgba(124,58,237,0.2), 0 20px 60px rgba(0,0,0,0.4)' : '0 4px 24px rgba(0,0,0,0.3)',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
           }}
         >
           {/* Search icon */}
@@ -208,8 +272,8 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
               else if (query.trim().length >= 2 && suggestions.length > 0) setShowSuggestions(true)
             }}
             placeholder={`Ex: ${PLACEHOLDERS[placeholderIdx]}`}
-            className="flex-1 bg-transparent py-4 pr-2 text-base outline-none"
-            style={{ color: '#f0f0f8' }}
+            className="flex-1 bg-transparent py-4 pr-2 text-base outline-none focus:outline-none focus:ring-0 focus:ring-offset-0"
+            style={{ color: '#f0f0f8', outline: 'none', boxShadow: 'none' }}
             autoComplete="off"
           />
 
@@ -237,8 +301,13 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
       {/* Suggestions dropdown (shown while typing, before full search) */}
       {showSuggestions && !isOpen && suggestions.length > 0 && (
         <div
-          className="absolute left-0 right-0 top-full mt-2 rounded-2xl overflow-hidden z-50"
+          className="absolute left-0 right-0 top-full mt-2 rounded-2xl overflow-hidden"
           style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            zIndex: 9999,
             background: '#0f0f1a',
             border: '1px solid rgba(255,255,255,0.1)',
             boxShadow: '0 16px 48px rgba(0,0,0,0.5)',
@@ -271,8 +340,13 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
       {/* Results dropdown */}
       {isOpen && results.length > 0 && (
         <div
-          className="animate-slide-down absolute left-0 right-0 top-full mt-2 rounded-2xl overflow-hidden z-50"
+          className="animate-slide-down absolute left-0 right-0 top-full mt-2 rounded-2xl overflow-hidden"
           style={{
+            position: 'absolute',
+            top: '100%',
+            left: 0,
+            right: 0,
+            zIndex: 9999,
             background: '#0f0f1a',
             border: '1px solid rgba(255,255,255,0.1)',
             boxShadow: '0 24px 80px rgba(0,0,0,0.6)',
@@ -314,6 +388,55 @@ export default function SmartSearch({ tools }: { tools: CatalogTool[] }) {
           </div>
         </div>
       )}
+      {/* Hints — smooth collapse when searching */}
+      {(discoverLink || (examples && examples.length > 0)) && (
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateRows: isSearching ? '0fr' : '1fr',
+            opacity: isSearching ? 0 : 1,
+            transition: 'grid-template-rows 0.35s ease, opacity 0.25s ease',
+            pointerEvents: isSearching ? 'none' : 'auto',
+          }}
+        >
+          <div style={{ overflow: 'hidden' }}>
+            {discoverLink && (
+              <div className="mt-4">
+                <Link
+                  href="/decouvrir"
+                  className="inline-flex items-center gap-1.5 text-sm px-4 py-2 rounded-full transition-all"
+                  style={{
+                    background: 'rgba(124,58,237,0.08)',
+                    border: '1px solid rgba(124,58,237,0.2)',
+                    color: '#a78bfa',
+                  }}
+                >
+                  ✨ Nouveau ici ? Commencez par Découvrir →
+                </Link>
+              </div>
+            )}
+            {examples && examples.length > 0 && (
+              <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
+                {examples.map((q) => (
+                  <Link
+                    key={q}
+                    href={`/tools?q=${encodeURIComponent(q)}`}
+                    className="px-3 py-1.5 rounded-full text-xs font-medium transition-all hover:scale-105"
+                    style={{
+                      background: 'rgba(255,255,255,0.05)',
+                      border: '1px solid rgba(255,255,255,0.1)',
+                      color: '#a8a8c0',
+                    }}
+                  >
+                    {q}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+      </div>{/* max-w-2xl wrapper */}
     </div>
     </>
   )

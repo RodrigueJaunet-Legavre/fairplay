@@ -6,6 +6,7 @@ import type { CatalogTool } from '@/lib/catalog-types'
 import ToolTabs from '@/app/ui/ToolTabs'
 import ToolLogo from '@/app/ui/ToolLogo'
 import ReviewSection from '@/app/ui/ReviewSection'
+import FavoriteButton from '@/app/ui/FavoriteButton'
 
 export function generateStaticParams() {
   const detailedSlugs = tools.map((t) => ({ slug: t.slug }))
@@ -119,6 +120,7 @@ export default async function ToolDetailPage(props: { params: Promise<{ slug: st
               >
                 ▲ Voter
               </button>
+              <FavoriteButton toolSlug={catalogTool.slug} />
             </div>
           </div>
         </div>
