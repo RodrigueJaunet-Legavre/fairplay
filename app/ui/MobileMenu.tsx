@@ -55,10 +55,18 @@ export default function MobileMenu() {
   // Close on route change
   useEffect(() => { setOpen(false) }, [pathname])
 
-  // Prevent body scroll when open
+  // Prevent body scroll + lower header z-index when open
+  // (backdrop-filter on header creates a GPU compositing layer that renders above fixed portals)
   useEffect(() => {
+    const header = document.querySelector('header')
     document.body.style.overflow = open ? 'hidden' : ''
-    return () => { document.body.style.overflow = '' }
+    if (header instanceof HTMLElement) {
+      header.style.zIndex = open ? '0' : ''
+    }
+    return () => {
+      document.body.style.overflow = ''
+      if (header instanceof HTMLElement) header.style.zIndex = ''
+    }
   }, [open])
 
   const drawer = (
