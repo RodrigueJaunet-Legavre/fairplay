@@ -5,7 +5,6 @@ import type { CatalogTool } from '@/lib/catalog-types'
 import SmartSearch from '@/app/ui/SmartSearch'
 import ToolLogo from '@/app/ui/ToolLogo'
 import FadeIn from '@/app/ui/FadeIn'
-import TeamSection from '@/app/ui/TeamSection'
 
 const detailedSlugs = new Set(tools.map((t) => t.slug))
 const allTools: CatalogTool[] = [
@@ -142,8 +141,6 @@ export default function HomePage() {
           </Link>
         </FadeIn>
       </section>
-
-      <TeamSection />
 
       {/* ── CTA ───────────────────────────────────────────────── */}
       <section className="px-4 sm:px-6 pb-28 pt-4">
